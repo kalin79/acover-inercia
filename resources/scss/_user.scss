@@ -1,0 +1,76 @@
+.pageProfileContainer {
+    padding: 8rem 0 4rem;
+
+    .profileBody {
+        padding-top: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid $grisClaro5;
+
+        .gridContainer {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+
+
+            >div {
+                .bottomItem {
+                    display: flex;
+                    justify-content: flex-end;
+
+                    img {
+                        width: 62px;
+                        height: 62px;
+
+                        @media screen and (min-width: 1400px) {
+                            width: 82px;
+                            height: 82px;
+                        }
+                    }
+                }
+
+                .topItem {
+                    padding-left: 1rem;
+
+                    img {
+                        max-width: 81px;
+                        height: auto;
+                        object-fit: contain;
+                        margin-top: .5rem;
+                    }
+                }
+            }
+        }
+    }
+
+    .profileHeader {
+        padding-bottom: 2rem;
+        border-bottom: 1px solid $grisClaro5;
+
+        .gridContainer {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1rem;
+
+            >div {
+                &:nth-of-type(1) {
+                    grid-column: 1 / span 6;
+                }
+
+                &:nth-of-type(2) {
+                    grid-column: 10 / -1;
+                    width: 100%;
+                    padding-top: 2rem;
+
+                    @media screen and (min-width: 1600px) {
+                        grid-column: 11 / -1;
+                    }
+
+                    button {
+                        width: 100%;
+                        justify-content: center;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,141 @@
+@mixin title {
+    color: #000;
+    font-size: 1rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    line-height: 1.5em;
+
+    @media screen and (min-width: 992px) {
+        font-size: 1.375rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 1.375rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1400px) {
+        font-size: 1.375rem;
+        line-height: 1.5em;
+    }
+
+    br {
+        display: none;
+
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
+}
+
+@mixin subTitle {
+    color: #000;
+    font-size: .85rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    line-height: 1.5em;
+
+    @media screen and (min-width: 992px) {
+        font-size: 1.125rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 1.125rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1400px) {
+        font-size: 1.125rem;
+        line-height: 1.5em;
+    }
+
+    br {
+        display: none;
+
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
+}
+
+@mixin description {
+    color: #4B4545;
+    font-size: .9rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    line-height: 1.5em;
+
+    @media screen and (min-width: 992px) {
+        font-size: .9rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 1rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1400px) {
+        font-size: 1rem;
+        line-height: 1.5em;
+    }
+
+    br {
+        display: none;
+
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
+}
+
+.pageLegaContainer {
+
+
+
+    .gridLayout {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1rem;
+        padding: 5rem 0;
+
+        p {
+            @include description;
+            margin-bottom: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        ul {
+            margin: 1.5rem 0;
+            list-style: disc;
+            padding-left: 2.5rem;
+
+            li {
+                padding-left: .5rem;
+            }
+        }
+
+        h1 {
+            @include title;
+        }
+
+        h3,
+        h2 {
+            @include subTitle;
+        }
+
+        h2 {
+            margin-top: 1rem;
+        }
+
+        h3 {
+            margin: 1rem 0 1.5rem;
+        }
+
+        >div {
+            grid-column: 2 / span 10;
+        }
+    }
+}

@@ -1,0 +1,118 @@
+footer {
+    background: #084DA6;
+    padding: 5rem 0 1.5rem;
+
+    .headerFooterContainer {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+
+        >div {
+            &:nth-of-type(1) {
+                p {
+                    font-family: 'Barlow';
+                    font-weight: 500;
+                    font-size: .875rem;
+                    line-height: 1.5em;
+                    color: white;
+                }
+
+                .redesContainer {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    gap: .85rem;
+                    margin: 1.5rem 0;
+                }
+
+                .iconContainer {
+                    max-width: 160px;
+                    margin-bottom: 1.5rem;
+
+                    img {
+                        width: 100%;
+                        height: auto;
+                        object-fit: contain;
+                        object-position: center;
+                    }
+                }
+            }
+
+            &:nth-of-type(2),
+            &:nth-of-type(3) {
+                padding-top: 4rem;
+
+                h4 {
+                    font-family: 'Barlow';
+                    font-weight: 700;
+                    font-size: 1.125rem;
+                    line-height: 1.25em;
+                    color: white;
+                    margin-bottom: 1rem;
+                }
+
+                ul {
+                    list-style: disc;
+                    margin-left: 1rem;
+
+                    li {
+                        font-family: 'Barlow';
+                        font-weight: 500;
+                        font-size: 1rem;
+                        line-height: 1.5em;
+                        color: white;
+                        padding-left: .25rem;
+                        margin-bottom: .5rem;
+                    }
+                }
+
+                .direccionContainer {
+                    .item {
+                        display: flex;
+                        justify-content: flex-start;
+                        align-items: center;
+                        gap: 1rem;
+                        margin-bottom: 1rem;
+
+                        .iconContainer {
+                            flex: 0 0 22px;
+                        }
+
+                        .infoContainer {
+                            flex: 1;
+
+                            h5 {
+                                font-family: 'Barlow';
+                                font-weight: 600;
+                                font-size: 1rem;
+                                line-height: 1.5em;
+                                color: white;
+                            }
+
+                            p {
+                                font-family: 'Barlow';
+                                font-weight: 400;
+                                font-size: .875rem;
+                                line-height: 1.5em;
+                                color: white;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    .bodyFooterContainer {
+        padding: 2rem 0 0;
+
+        p {
+            font-family: 'Poppins';
+            font-weight: 500;
+            font-size: .875rem;
+            line-height: 1.5em;
+            color: rgba(white, .5);
+        }
+    }
+}

@@ -1,0 +1,166 @@
+@mixin fuenteBoton {
+    font-family: 'Barlow';
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.5em;
+    color: white;
+}
+
+@mixin fuenteBotonPop {
+    font-family: 'Poppins';
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.5em;
+    color: white;
+}
+
+@mixin fuenteCookies {
+    font-family: 'Poppins';
+    font-weight: 500;
+    font-size: 0.8rem;
+    line-height: 1.5em;
+    color: white;
+}
+
+@mixin fuenteNavegacion {
+    font-family: 'Barlow';
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.5em;
+    color: #595959;
+}
+
+@mixin titularesGrande {
+    font-family: 'Barlow';
+    font-weight: 700;
+    font-size: 2.875rem;
+    line-height: 1em;
+    color: $azul;
+
+    @media screen and (min-width: 992px) {
+        font-size: 3rem;
+        line-height: 1em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 3.5rem;
+        line-height: 1em;
+    }
+}
+
+@mixin subTitulo {
+    font-family: 'Barlow';
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.25em;
+    color: #78CBFF;
+
+    @media screen and (min-width: 992px) {
+        font-size: 1.125rem;
+        line-height: 1.25em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 1.125rem;
+        line-height: 1.25em;
+    }
+}
+
+@mixin titulo {
+    font-family: 'Barlow';
+    font-weight: 500;
+    font-size: 2rem;
+    line-height: 1em;
+    color: #fff;
+
+    @media screen and (min-width: 992px) {
+        font-size: 2.25rem;
+        line-height: 1.1em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 2.625rem;
+        line-height: 1em;
+    }
+}
+
+@mixin tituloMediano {
+    font-family: 'Barlow';
+    font-weight: 400;
+    font-size: 1.25rem;
+    line-height: 1.35em;
+    color: #78CBFF;
+
+    @media screen and (min-width: 992px) {
+        font-size: 1.25rem;
+        line-height: 1.35em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 1.375rem;
+        line-height: 1.65em;
+    }
+}
+
+@mixin descripcion {
+    font-family: 'Barlow';
+    font-weight: 500;
+    font-size: 1.125rem;
+    line-height: 1.5em;
+    color: #fff;
+
+    @media screen and (min-width: 992px) {
+        font-size: 1.125rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 1.125rem;
+        line-height: 1.5em;
+    }
+}
+
+@mixin tituloCardProduct {
+    font-family: 'Poppins';
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.5em;
+    color: #565656;
+
+    @media screen and (min-width: 992px) {
+        font-size: 0.875rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 0.875rem;
+        line-height: 1.5em;
+    }
+}
+
+@mixin categoriaCardProduct {
+    font-family: 'Poppins';
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1.5em;
+    color: #969696;
+
+    @media screen and (min-width: 992px) {
+        font-size: 0.75rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 0.75rem;
+        line-height: 1.5em;
+    }
+}
+
+@mixin inputFiltroForm {
+    font-family: 'Poppins';
+    font-weight: 500;
+    font-size: 0.813rem;
+    line-height: 1.5em;
+    color: #C0C0C0;
+
+}

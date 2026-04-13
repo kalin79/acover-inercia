@@ -1,0 +1,73 @@
+.headerContainerMain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid #DADADA;
+    background: rgba(white, .65);
+    padding: 1rem 0;
+    z-index: 6000;
+    height: 72px;
+    box-sizing: border-box;
+
+    @media screen and (min-width: 992px) {
+        height: 80px;
+    }
+
+    .gridContainer {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1rem;
+
+        .logoContainer {
+            grid-column: 1 / span 3;
+        }
+
+        .navContainer {
+            grid-column: 5 / -1;
+
+            nav {
+                display: none;
+
+                @media screen and (min-width: 992px) {
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    gap: 1rem;
+                    height: 100%;
+                }
+
+                a {
+                    @include fuenteNavegacion;
+                }
+
+                button {
+                    width: 192px;
+                    height: 48px;
+                    background: $azul;
+                    border-radius: 30px;
+                    @include fuenteBoton;
+                }
+
+                .opcionesNav {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    gap: 1rem
+                }
+            }
+        }
+    }
+
+    .menuMovilNav {
+        display: block;
+
+        @media screen and (min-width: 992px) {
+            display: none;
+        }
+    }
+}
+
+.PanelMenuMobil {
+    display: none;
+}
