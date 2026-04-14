@@ -75,12 +75,12 @@
 
     @media screen and (min-width: 992px) {
         font-size: 2.25rem;
-        line-height: 1.1em;
+        line-height: 1.15em;
     }
 
     @media screen and (min-width: 1200px) {
         font-size: 2.625rem;
-        line-height: 1em;
+        line-height: 1.15em;
     }
 }
 
@@ -162,5 +162,69 @@
     font-size: 0.813rem;
     line-height: 1.5em;
     color: #C0C0C0;
+
+}
+
+@mixin titularProducto {
+    font-family: 'Barlow';
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.35em;
+    color: #78CBFF;
+
+    @media screen and (min-width: 992px) {
+        font-size: 1.75rem;
+        line-height: 1.35em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 2rem;
+        line-height: 1.25em;
+    }
+}
+
+@mixin descripcionProducto {
+    font-family: 'Barlow';
+    font-weight: 400;
+    font-size: .85rem;
+    line-height: 1.5em;
+    color: #565656;
+
+    @media screen and (min-width: 992px) {
+        font-size: 1rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 1rem;
+        line-height: 1.5em;
+    }
+}
+
+@mixin subTituloProducto {
+    font-family: 'Barlow';
+    font-weight: 500;
+    font-size: .85rem;
+    line-height: 1.5em;
+    color: #565656;
+
+    @media screen and (min-width: 992px) {
+        font-size: 1rem;
+        line-height: 1.5em;
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size: 1rem;
+        line-height: 1.5em;
+    }
+}
+
+@mixin descripcionPequeProducto {
+    font-family: 'Barlow';
+    font-weight: 500;
+    font-size: 0.938rem;
+    line-height: 1.5em;
+    color: #727272;
+
 
 }

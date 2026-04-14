@@ -10,7 +10,12 @@ class CategoryController extends Controller
     public function show($slug)
     {
         $category = Category::where('slug', $slug)
-            ->with(['products.media', 'features'])  // cargamos productos y sus imágenes
+            ->with([
+                'products.media',
+                'features' => function ($query) {
+                    $query->with(['options']); // ← Esto es lo más importante
+                }
+            ])  // cargamos productos y sus imágenes
             ->firstOrFail();
 
         return Inertia::render('CategoryShow', [

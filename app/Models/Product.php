@@ -6,7 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $fillable = ['category_id', 'titulo', 'subtitulo', 'descripcion', 'slug'];
+    protected $fillable = [
+        'category_id',
+        'titulo',
+        'subtitulo',
+        'descripcion',
+        'slug',
+        'banner_pc',           // nuevo
+        'banner_mobile',       // nuevo
+        'cover_image',         // nuevo
+        'technical_document'   // nuevo
+    ];
 
     public function category()
     {
@@ -17,6 +27,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Feature::class, 'product_features')
             ->withPivot('value')
+            ->with(['options'])                     // ← Agrega esto
             ->withTimestamps();
     }
     public function media()

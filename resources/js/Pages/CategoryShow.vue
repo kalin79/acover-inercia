@@ -1,7 +1,10 @@
 <template>
     <section>
-        <BannerInterno :banners="banners" />
-        <ListadoProductos />
+        <BannerInterno :category="category" />
+        <ListadoProductos 
+            :products="products" 
+            :category="category"
+        />
     </section>
 </template>
 
@@ -12,7 +15,7 @@ import { ref, onMounted } from 'vue';
 import BannerInterno from '../components/BannerInterno.vue';
 import ListadoProductos from '../components/productos/Listado.vue';
 
-const page = usePage()
+const { products, category } = usePage().props;
 
 
 const banners = [
@@ -21,12 +24,9 @@ const banners = [
 
     }
 ]
-// Ejemplo: leer título y descripción que envías desde Laravel
-console.log(page.props.title)
-console.log(page.props.description)
 
 // O actualizar el título dinámicamente
 onMounted(() => {
-    document.title = page.props.title || 'Acover'
+    // document.title = page.props.title || 'Acover'
 })
 </script>

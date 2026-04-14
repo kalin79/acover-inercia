@@ -49,6 +49,18 @@ createInertiaApp({
                 const slug = params.slug || params[0] || 'lockers';
                 return `/categoria/${slug}`;
             }
+            if (name === 'category.show') {
+                const slug = params.slug || params[0] || params.category_slug || 'lockers';
+                return `/categoria/${slug}`;
+            }
+            if (name === 'product.show') {
+                const category_slug = params.category_slug || params[0];
+                const product_slug = params.product_slug || params[1];
+
+                if (category_slug && product_slug) {
+                    return `/producto/${category_slug}/${product_slug}`;
+                }
+            }
 
             return `/${name}`;
         };

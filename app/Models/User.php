@@ -12,32 +12,18 @@ class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -47,15 +33,23 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * Determina si el usuario puede acceder al panel de Filament
+     * Permite acceso al panel Filament según el rol
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        // Por ahora permitimos acceso a todos los usuarios registrados
-        // Puedes cambiar esto después según tus necesidades
-        return true;
+        return in_array($this->role, ['admin', 'editor']);
+    }
 
-        // Ejemplo más seguro (solo ciertos usuarios):
-        // return $this->email === 'admin@acover.com.pe' || $this->id === 1;
+    /**
+     * Helpers útiles
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isEditor(): bool
+    {
+        return $this->role === 'editor';
     }
 }

@@ -52,24 +52,28 @@ class ProductResource extends Resource
                             ->relationship('category', 'titulo')
                             ->required()
                             ->searchable()
-                            ->preload(),
+                            ->preload()
+                            ->columnSpanFull(),   // ← Ocupa todo el ancho
 
                         TextInput::make('titulo')
                             ->label('Título')
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn($state, $set) => $set('slug', \Illuminate\Support\Str::slug($state))),
+                            ->afterStateUpdated(fn($state, $set) => $set('slug', \Illuminate\Support\Str::slug($state)))
+                            ->columnSpanFull(),
 
                         TextInput::make('subtitulo')
                             ->label('Subtítulo')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->columnSpanFull(),
 
                         TextInput::make('slug')
                             ->label('Slug')
                             ->required()
                             ->unique(ignoreRecord: true)
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->columnSpanFull(),
 
                         RichEditor::make('descripcion')
                             ->label('Descripción del producto')
@@ -88,12 +92,51 @@ class ProductResource extends Resource
                                 'blockquote',
                                 'codeBlock',
                             ])
-                            ->columnSpanFull()
-                            ->extraInputAttributes(['style' => 'min-height: 450px;'])
-                            ->placeholder('Escribe aquí la descripción detallada del producto...'),
+                            ->extraInputAttributes(['style' => 'min-height: 150px;'])
+                            ->placeholder('Escribe aquí la descripción detallada del producto...')
+                            ->columnSpanFull(),
                     ])
-                    ->columns(2),
+                    ->columnSpanFull(),   // ← Esto hace que toda la sección ocupe el 100%
+                Section::make('Imágenes y Banners')
+                    ->schema([
+                        FileUpload::make('banner_pc')
+                            ->label('Banner PC (Escritorio)')
+                            ->image()
+                            ->directory('products/banners')
+                            ->disk('public')                      // ← Forzar disco public
+                            ->imagePreviewHeight('120px')
+                            ->maxSize(2048)           // 2MB
+                            ->columnSpan(1),
 
+                        FileUpload::make('banner_mobile')
+                            ->label('Banner Móvil')
+                            ->image()
+                            ->directory('products/banners')
+                            ->imagePreviewHeight('120px')
+                            ->disk('public')                      // ← Forzar disco public
+                            ->maxSize(2048)
+                            ->columnSpan(1),
+
+                        FileUpload::make('cover_image')
+                            ->label('Imagen Cover (Principal)')
+                            ->disk('public')                      // ← Forzar disco public
+                            ->image()
+                            ->directory('products/covers')
+                            ->helperText('Tamaño: 384px x 600px')
+                            ->maxSize(2048)
+                            ->columnSpanFull(),
+
+                        FileUpload::make('technical_document')
+                            ->label('Documento Técnico / Ficha (PDF)')
+                            ->acceptedFileTypes(['application/pdf'])
+                            ->directory('products/documents')
+                            ->disk('public')
+                            ->maxSize(5120) // 5MB
+                            ->downloadable()
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2)
+                    ->columnSpanFull(),
                 Section::make('Galería de Medios (Imágenes, Videos y YouTube)')
                     ->schema([
                         Repeater::make('media')
@@ -133,12 +176,13 @@ class ProductResource extends Resource
                                     ->numeric()
                                     ->default(0),
                             ])
-                            ->columns(2)
+                            ->columnSpanFull()
                             ->reorderable()
                             ->addActionLabel('Agregar nuevo elemento a la galería')
                             ->defaultItems(0)
                             ->collapsible(),
                     ]),
+
             ]);
     }
 
@@ -147,11 +191,6 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('category.titulo')
-                    ->label('Categoría')
-                    ->sortable()
-                    ->searchable(),
-
                 Tables\Columns\TextColumn::make('titulo')
                     ->label('Producto')
                     ->weight('bold')
@@ -163,6 +202,12 @@ class ProductResource extends Resource
 
                 Tables\Columns\TextColumn::make('slug')
                     ->toggleable(isToggledHiddenByDefault: true),
+
+                // Nuevo campo: Documento Técnico
+                Tables\Columns\TextColumn::make('technical_document')
+                    ->label('Documento')
+                    ->formatStateUsing(fn($state) => $state ? '✓ PDF' : '—')
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Creado')
@@ -181,6 +226,7 @@ class ProductResource extends Resource
                 ]),
             ]);
     }
+
 
     public static function getRelations(): array
     {

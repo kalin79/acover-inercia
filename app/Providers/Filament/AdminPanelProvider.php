@@ -24,8 +24,8 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('acover-admin')           // Ruta temporal
-            ->login()                        // ← Activa la página de login
+            ->path('acover-admin')           // ← Ruta principal
+            ->login()
             ->authGuard('web')
             ->passwordReset()
             ->emailVerification(false)
@@ -54,6 +54,6 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->spa(false);   // Ayuda a evitar 403 en hostings
+            ->spa(false);
     }
 }

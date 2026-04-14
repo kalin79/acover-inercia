@@ -2,6 +2,7 @@
     <main class="products-page">
         <div class="containerFluid">
             <div class="products-wrapper">
+                
                 <!-- FILTROS (lado izquierdo) -->
                 <aside class="filters-sidebar">
                     <div class="filters-inner">
@@ -17,87 +18,27 @@
                                 <input type="text" placeholder="¿Qué buscas?" />
                             </div>
                         </div>
-                        <div class="mantaFiltro">
-                            <div class="headerContainer" id="header-1" @click="toggleManta(1)">
-                                <h3>Color</h3>
+                        <div class="mantaFiltro" 
+                            v-for="feature in category.features"
+                            :key="feature.id"
+                        >
+                            <div class="headerContainer" :id="`header-${feature.id}`" @click="toggleManta(feature.id)">
+                                <h3>{{feature.name}}</h3>
                                 <div class="iconContainer">
                                     <img :src="iconarrow" alt="">
                                 </div>
                             </div>
-                            <div class="opcionesContainer" id="opciones-1">
-                                <label v-for="color in colores" :key="color.id" class="checkbox-item">
+                            <div class="opcionesContainer" :id="`opciones-${feature.id}`">
+                                <label v-for="option in feature.options" :key="option.id" class="checkbox-item">
                                     <input 
                                         type="checkbox" 
-                                        :value="color.slug"
+                                        :value="option.id"
                                         v-model="selectedColores"
                                         @change="applyFilters"
                                     />
                                     <span class="checkmark"></span>
-                                    {{ color.name }}
+                                    {{ option.value }}
                                     <!-- <span class="count">({{ color.count }})</span> -->
-                                </label>
-                            </div>
-                        </div>
-                        <div class="mantaFiltro">
-                            <div class="headerContainer" id="header-2" @click="toggleManta(2)">
-                                <h3>Tipo de cerradura</h3>
-                                <div class="iconContainer">
-                                    <img :src="iconarrow" alt="">
-                                </div>
-                            </div>
-                            <div class="opcionesContainer" id="opciones-2">
-                                <label v-for="cerradura in cerraduras" :key="cerradura.id" class="checkbox-item">
-                                    <input 
-                                        type="checkbox" 
-                                        :value="cerradura.slug"
-                                        v-model="selectedCerraduras"
-                                        @change="applyFilters"
-                                    />
-                                    <span class="checkmark"></span>
-                                    {{ cerradura.name }}
-                                    <!-- <span class="count">({{ cerradura.count }})</span> -->
-                                </label>
-                            </div>
-                        </div>
-                        <div class="mantaFiltro">
-                            <div class="headerContainer" id="header-3" @click="toggleManta(3)">
-                                <h3>Cantidad de puertas</h3>
-                                <div class="iconContainer">
-                                    <img :src="iconarrow" alt="">
-                                </div>
-                            </div>
-                            <div class="opcionesContainer" id="opciones-3">
-                                <label v-for="puerta in puertas" :key="puerta.id" class="checkbox-item">
-                                    <input 
-                                        type="checkbox" 
-                                        :value="puerta.slug"
-                                        v-model="selectedPuertas"
-                                        @change="applyFilters"
-                                    />
-                                    <span class="checkmark"></span>
-                                    {{ puerta.name }}
-                                    <!-- <span class="count">({{ cerradura.count }})</span> -->
-                                </label>
-                            </div>
-                        </div>
-                        <div class="mantaFiltro">
-                            <div class="headerContainer" id="header-4" @click="toggleManta(4)">
-                                <h3>Cantidad de columnas </h3>
-                                <div class="iconContainer">
-                                    <img :src="iconarrow" alt="">
-                                </div>
-                            </div>
-                            <div class="opcionesContainer" id="opciones-4">
-                                <label v-for="columna in columnas" :key="columna.id" class="checkbox-item">
-                                    <input 
-                                        type="checkbox" 
-                                        :value="columna.slug"
-                                        v-model="selectedColumnas"
-                                        @change="applyFilters"
-                                    />
-                                    <span class="checkmark"></span>
-                                    {{ columna.name }}
-                                    <!-- <span class="count">({{ cerradura.count }})</span> -->
                                 </label>
                             </div>
                         </div>
@@ -106,17 +47,18 @@
                 <!-- LISTADO DE PRODUCTOS (lado derecho) -->
                 <section class="products-content">
                     <!-- Aquí tu grid o lista de productos -->
+                     <!-- <pre>{{ JSON.stringify(category, null, 2) }}</pre> -->
                      <div class="products-grid">
                         <div class="cardProducts" v-for="(item, index) in products" :key="index">
                             <div class="imgContainer">
-                                <img :src="item.imagen" :alt="item.titulo" />
+                                <img :src="`/storage/${item.cover_image}`" :alt="item.titulo" />
                             </div>
                             <div class="dataContainer">
-                                <h3>{{item.categoria}}</h3>
+                                <h3>{{category.titulo}}</h3>
                                 <h2>{{item.titulo}}</h2>
-                                <a :href="item.link" class="btnRelleno">
+                                <Link :href="route('product.show', {category_slug: category.slug,product_slug: item.slug})" class="btnRelleno">
                                     Ver detalles
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -127,40 +69,21 @@
 </template>
 <script setup>
 import { ref, watch } from 'vue'
+import { Link } from '@inertiajs/vue3'
 const iconarrow = '/images/iconarrow.svg'
-const products = ref([
-    {
-        imagen: '/images/p1.webp',
-        link: '/',
-        titulo: `Locker LP01-04 / 4 Puertas`,
-        categoria: `LOCKER DE PLÁSTICO`,
+
+const props = defineProps({
+    products: {
+        type: Object,
+        required: true
     },
-    {
-        imagen: '/images/p2.webp',
-        link: '/',
-        titulo: `Cartón corrugado`,
-        categoria: `MATERIAL DE EMBALAJE`,
-    },
-    {
-        imagen: '/images/p3.webp',
-        link: '/',
-        titulo: `Cinta de embalaje`,
-        categoria: `INSUMOS`,
-    },
-    {
-        imagen: '/images/p4.webp',
-        link: '/',
-        titulo: `Strech film`,
-        categoria: `INSUMOS`,
-    },
-    {
-        imagen: '/images/p1.webp',
-        link: '/',
-        titulo: `Strech film`,
-        categoria: `INSUMOS`,
+    category: {
+        type: Object,
+        default: null
     }
-   
-])
+});
+
+
 const colores = ref([
     { id: 1, name: 'Azul', count: 45, slug: 'azul' },
     { id: 2, name: 'Rojo', count: 45, slug: 'rojo' },

@@ -1,10 +1,10 @@
 <template>
     <div class="bannerInterno">
         <!-- {{ banners.data.banners }} -->
-        <Splide v-if="banners" :options="options" class="splide-custom">
-            <SplideSlide v-for="(img, index) in banners" :key="index">
-                <div class="slideContainer">
-                    <img :src="img.poster" alt="Slide" class="imgBanner" />
+        <Splide v-if="category && category.banner_pc !=''" :options="options" class="splide-custom">
+            <SplideSlide>
+                <div class="slideContainer" >
+                    <img :src="`/storage/${category.banner_pc}`" alt="Slide" class="imgBanner" />
                 </div>
             </SplideSlide>
         </Splide>
@@ -38,12 +38,11 @@ const options = {
 }
 
 const props = defineProps({
-    banners: {
-        type: Array,
-        required: true,
-        default: () => []   // opcional
+    category: {
+        type: Object,
+        default: null
     }
-})
+});
 </script>
 
 

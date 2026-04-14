@@ -1,3 +1,153 @@
+.productoDetalleSeccion {
+    padding: 5rem 0 5rem;
+
+    .layoutGrid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+
+        .productoInfoContainer {
+            h1 {
+                @include titularProducto;
+                color: $azul;
+            }
+
+            h2 {
+                @include subTitulo;
+                color: #000000;
+            }
+
+
+
+            .caracetisticasContainer {
+
+                h3,
+                h4 {
+                    @include subTituloProducto;
+                    color: #000000;
+                }
+
+                .tablaContainer {
+                    padding: 0 1.85rem 0;
+                    margin-top: 1rem;
+
+                    .rowContainer {
+                        margin-bottom: 1.5rem;
+
+                        .btnTransparente {
+                            height: 48px;
+                            width: 262px;
+                            border: 1px solid #969696;
+                            background: tranparent;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            gap: .5rem;
+                            box-sizing: border-box;
+                            border-radius: 30px;
+                            @include fuenteBotonPop;
+                            color: #626262;
+                            text-decoration: none;
+                        }
+
+                        .itemContainer {
+                            border: 1px solid #C7C7C7;
+                            border-bottom: 0;
+                            padding: 1rem 1rem;
+                            display: flex;
+
+                            &.itemColoresContainer {
+                                justify-content: flex-start;
+                                gap: .25rem;
+
+                                >div {
+                                    width: 16px;
+                                    height: 16px;
+                                    background: #000;
+                                    border-radius: 100%;
+                                    flex: 0 0 16px;
+                                }
+                            }
+
+                            >div {
+                                flex: 1;
+                                @include descripcionPequeProducto;
+                            }
+
+                            &:last-child {
+                                border-bottom: 1px solid #C7C7C7;
+                            }
+                        }
+                    }
+
+
+                    h4 {
+                        position: relative;
+                        padding-left: 1rem;
+                        margin-bottom: 1.25rem;
+
+                        &:before {
+                            content: '';
+                            width: 6px;
+                            height: 6px;
+                            background: #000;
+                            border-radius: 50%;
+                            display: block;
+                            bottom: 0.45rem;
+                            left: 0;
+                            position: absolute;
+                        }
+                    }
+                }
+            }
+
+            .descripcionProdContainer {
+                margin-top: .5rem;
+
+                p {
+                    @include descripcionProducto;
+                }
+            }
+
+            .btnContainer {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                margin-bottom: 2.5rem;
+
+                a,
+                button {
+                    flex: 1;
+                    height: 58px;
+                    width: 100%;
+                    background: #2AB200;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: .5rem;
+                    box-sizing: border-box;
+                    border-radius: 30px;
+                    @include fuenteBotonPop;
+                    color: white;
+                    text-decoration: none;
+                    margin-top: 1.5rem;
+
+                    img {
+                        width: 22px;
+                        height: auto;
+                        object-fit: contain;
+                    }
+                }
+
+                button {
+                    background: $azul;
+
+                }
+            }
+        }
+    }
+}
+
 // ====================== PRODUCTOS PAGE ======================
 
 .products-page {
@@ -237,6 +387,8 @@
                         align-items: center;
                         padding-top: 1.15rem;
                         padding-bottom: 2rem;
+                        padding-left: 1rem;
+                        padding-right: 1rem;
 
                         h3 {
                             @include categoriaCardProduct;
@@ -244,6 +396,7 @@
 
                         h2 {
                             @include tituloCardProduct;
+                            text-align: center;
                         }
 
                         .btnRelleno {

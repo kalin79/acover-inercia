@@ -48,6 +48,11 @@ class FeatureOptionResource extends Resource
                             ->label('Valor')
                             ->required()
                             ->placeholder('Ej: Rojo, Azul, Metal'),
+                        TextInput::make('codigo')
+                            ->label('Código interno (opcional)')
+                            ->placeholder('#f00')
+                            ->maxLength(50)
+                            ->nullable(),
 
                     ])
             ]);
