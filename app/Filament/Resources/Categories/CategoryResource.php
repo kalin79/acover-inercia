@@ -90,10 +90,9 @@ class CategoryResource extends Resource
                         Select::make('features')
                             ->label('Características asignadas')
                             ->relationship(
-                                name: 'features',           // nombre de la relación en el modelo Category
+                                name: 'features',
                                 titleAttribute: 'name',
-                                modifyQueryUsing: fn($query) =>
-                                $query->where('type', '!=', 'text')   // ← Aquí está el filtro
+                                modifyQueryUsing: fn($query) => $query->where('type', 'select')  // ← Filtro clave
                             )
                             ->multiple()
                             ->searchable()

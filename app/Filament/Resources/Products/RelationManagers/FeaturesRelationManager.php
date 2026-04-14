@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Products\RelationManagers;
 
-use App\Models\Feature;                    // ← Esta línea faltaba
+use App\Models\Feature;
 use Filament\Actions\AttachAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -50,20 +50,17 @@ class FeaturesRelationManager extends RelationManager
                     ->live()
                     ->columnSpanFull(),
 
+                // Para features tipo SELECT (Colores, Accesorios, etc.)
                 CheckboxList::make('value')
-                    ->label(
-                        fn(callable $get) =>
-                        Feature::find($get('feature_id'))?->name ?? 'Seleccionar opciones'
-                    )
+                    ->label('Opciones')
                     ->options(function (callable $get) {
                         $featureId = $get('feature_id');
                         if (!$featureId)
                             return [];
 
                         $feature = Feature::with('options')->find($featureId);
-                        if (!$feature || $feature->type !== 'select') {
+                        if (!$feature || $feature->type !== 'select')
                             return [];
-                        }
 
                         return $feature->options->pluck('value', 'value');
                     })
@@ -75,9 +72,10 @@ class FeaturesRelationManager extends RelationManager
                     ->columns(3)
                     ->columnSpanFull(),
 
+                // Para features tipo TEXT (Dimensiones, etc.)
                 TextInput::make('value')
                     ->label('Valor')
-                    ->placeholder('Ej: 1.94 m, Rojo mate, 4 puertas')
+                    ->placeholder('Ej: 1.94 m, Rojo mate, etc.')
                     ->maxLength(255)
                     ->visible(
                         fn(callable $get) =>
@@ -106,18 +104,24 @@ class FeaturesRelationManager extends RelationManager
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('pivot.value')
-                    ->label('Valor / Opciones')
+                    ->label('Valor asignado')
                     ->placeholder('—')
                     ->wrap()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Creado')
-                    ->dateTime('d/m/Y')
+                // Campo de orden editable
+                Tables\Columns\TextInputColumn::make('pivot.sort_order')
+                    ->label('Orden')
+                    ->type('number')                    // ← Correcto en v5
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->rules(['integer', 'min:0'])
+                    ->updateStateUsing(function ($record, $state) {
+                        $record->pivot->sort_order = (int) $state;
+                        $record->pivot->save();
+                    }),
             ])
-            ->defaultSort('group', 'asc')
+            ->defaultSort('sort_order', 'asc')
+            ->reorderable('sort_order')
             ->headerActions([
                 AttachAction::make()
                     ->label('Adjuntar característica')

@@ -26,8 +26,9 @@ class Product extends Model
     public function features()
     {
         return $this->belongsToMany(Feature::class, 'product_features')
-            ->withPivot('value')
+            ->withPivot('value', 'sort_order')           // ← agregamos sort_order
             ->with(['options'])                     // ← Agrega esto
+            ->orderBy('product_features.sort_order', 'ASC')   // ← orden por producto
             ->withTimestamps();
     }
     public function media()
