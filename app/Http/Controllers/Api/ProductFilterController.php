@@ -10,24 +10,37 @@ class ProductFilterController extends Controller
 {
     public function filter(Request $request)
     {
-        $query = Product::with(['media', 'category']);
+        $categorySlug = $request->input('category_slug');
 
-        // ==================== FILTRO POR ID DE OPCIÓN (VERSIÓN RECOMENDADA) ====================
+        if (!$categorySlug) {
+            return response()->json([
+                'success' => false,
+                'message' => 'category_slug es requerido'
+            ], 400);
+        }
+
+        $query = Product::with(['media', 'category'])
+            ->whereHas('category', function ($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug);
+            });
+
+        // ==================== FILTROS POR OPCIÓN ====================
         foreach ($request->all() as $group => $optionIds) {
-            if (is_array($optionIds) && !empty($optionIds)) {
+            if ($group === 'category_slug' || $group === 'search' || $group === 'page') {
+                continue; // ignorar parámetros especiales
+            }
 
+            if (is_array($optionIds) && !empty($optionIds)) {
                 $normalizedGroup = str_replace('_', ' ', $group);
 
-                // Obtener los nombres reales de las opciones seleccionadas
                 $optionNames = \App\Models\FeatureOption::whereIn('id', $optionIds)
                     ->pluck('value')
                     ->toArray();
 
                 \Log::info("=== FILTRO RECIBIDO ===", [
-                    'grupo_original' => $group,
-                    'grupo_normalizado' => $normalizedGroup,
+                    'grupo' => $normalizedGroup,
                     'option_ids' => $optionIds,
-                    'nombres_a_buscar' => $optionNames
+                    'nombres' => $optionNames
                 ]);
 
                 if (!empty($optionNames)) {
@@ -44,12 +57,9 @@ class ProductFilterController extends Controller
             }
         }
 
-        // ==================== BÚSQUEDA POR TEXTO ====================
+        // Búsqueda por texto
         if ($request->filled('search')) {
             $search = trim($request->search);
-
-            \Log::info("Búsqueda por texto", ['search' => $search]);
-
             $query->where(function ($q) use ($search) {
                 $q->where('titulo', 'LIKE', "%{$search}%")
                     ->orWhere('descripcion', 'LIKE', "%{$search}%")
@@ -57,13 +67,11 @@ class ProductFilterController extends Controller
             });
         }
 
-        // ==================== EJECUCIÓN ====================
         $products = $query->paginate(12);
 
-        \Log::info('Resultado de filtro', [
-            'total_productos' => $products->total(),
-            'pagina_actual' => $products->currentPage(),
-            'total_paginas' => $products->lastPage()
+        \Log::info('Resultado final', [
+            'categoria' => $categorySlug,
+            'total_productos' => $products->total()
         ]);
 
         return response()->json([
@@ -75,8 +83,6 @@ class ProductFilterController extends Controller
             'per_page' => $products->perPage(),
             'from' => $products->firstItem(),
             'to' => $products->lastItem(),
-            'next_page_url' => $products->nextPageUrl(),
-            'prev_page_url' => $products->previousPageUrl(),
         ]);
     }
 }

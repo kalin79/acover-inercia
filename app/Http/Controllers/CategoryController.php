@@ -12,7 +12,13 @@ class CategoryController extends Controller
     public function show($slug, Request $request)
     {
         $category = Category::where('slug', $slug)
-            ->with(['features.options', 'products.media'])
+            ->with([
+                'features' => function ($query) {
+                    $query->with('options')                    // traemos las opciones (colores, etc.)
+                        ->orderBy('category_feature.sort_order', 'ASC');  // ← ORDEN CORRECTO
+                },
+                'products.media'
+            ])
             ->firstOrFail();
 
         $query = $category->products()

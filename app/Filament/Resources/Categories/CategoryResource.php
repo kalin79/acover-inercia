@@ -8,20 +8,17 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-// Actions
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\BulkActionGroup;
-
-// Components
+// Schemas
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Grid;
+
+// Forms Components
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\FileUpload;
-// use Filament\Forms\Components\Toggle;
-// use Filament\Forms\Components\Repeater;
+
+// Action
+use Filament\Actions\Action;
 
 class CategoryResource extends Resource
 {
@@ -51,54 +48,63 @@ class CategoryResource extends Resource
                         TextInput::make('slug')
                             ->label('Slug')
                             ->required()
-                            ->unique(ignoreRecord: true)
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
 
                         Textarea::make('descripcion')
                             ->label('Descripción')
-                            ->rows(4)
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(2),
+                            ->rows(4),
+                    ]),
 
                 Section::make('Imágenes de Banner')
                     ->schema([
                         FileUpload::make('banner_pc')
                             ->label('Banner para PC (Desktop)')
-                            ->disk('public')
+                            ->image()
                             ->directory('categories/banners')
-                            ->maxSize(8192)
-                            ->rules([])                    // Acepta todo
-                            ->previewable()
-                            ->imagePreviewHeight('220px')
-                            ->helperText('Tamaño: 2160px x 213px'),
+                            ->disk('public')
+                            ->visibility('public')
+                            ->maxSize(2048)
+                            ->columnSpan(1),
 
                         FileUpload::make('banner_mobile')
                             ->label('Banner para Móvil')
-                            ->disk('public')
+                            ->image()
                             ->directory('categories/banners')
-                            ->maxSize(8192)
-                            ->rules([])                    // Acepta todo
-                            ->previewable()
-                            ->imagePreviewHeight('220px')
-                            ->helperText('Tamaño: 2160px x 213px'),
+                            ->disk('public')
+                            ->visibility('public')
+                            ->maxSize(2048)
+                            ->columnSpan(1),
                     ])
                     ->columns(2),
 
-                Section::make('Características y Filtros')
+                // SECCIÓN CON TARJETAS (icono arriba + título abajo)
+                Section::make('Secciones de la Categoría')
+                    ->description('Gestiona las diferentes partes de esta categoría')
                     ->schema([
-                        Select::make('features')
-                            ->label('Características asignadas')
-                            ->relationship(
-                                name: 'features',
-                                titleAttribute: 'name',
-                                modifyQueryUsing: fn($query) => $query->where('type', 'select')  // ← Filtro clave
-                            )
-                            ->multiple()
-                            ->searchable()
-                            ->preload()
-                            ->columnSpanFull(),
-                    ]),
+                        Grid::make(2)
+                            ->schema([
+                                Action::make('manageFilters')
+                                    ->label('Gestionar Filtros')
+                                    ->icon(Heroicon::AdjustmentsHorizontal)
+                                    ->color('warning')
+                                    ->url(fn(Category $record) => "/acover-admin/categories/{$record->id}/filters")
+                                    ->extraAttributes([
+                                        'class' => 'h-32 flex flex-col items-center justify-center gap-3 text-center hover:scale-105 transition-transform border border-dashed'
+                                    ]),
+
+                                // Action::make('manageSEO')
+                                //     ->label('Configuración SEO')
+                                //     ->icon(Heroicon::GlobeAlt)
+                                //     ->color('info')
+                                //     ->url(fn(Category $record) => "/acover-admin/categories/{$record->id}/seo")
+                                //     ->extraAttributes([
+                                //         'class' => 'h-32 flex flex-col items-center justify-center gap-3 text-center hover:scale-105 transition-transform border border-dashed'
+                                //     ]),
+                            ])
+                            ->columns(2),
+                    ])
+                    ->columnSpanFull(),   // Esta línea hace que ocupe todo el ancho
             ]);
     }
 
@@ -111,31 +117,9 @@ class CategoryResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-
-                \Filament\Tables\Columns\TextColumn::make('slug')
-                    ->label('Slug')
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                \Filament\Tables\Columns\TextColumn::make('descripcion')
-                    ->label('Descripción')
-                    ->limit(60)
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                \Filament\Tables\Columns\TextColumn::make('created_at')
-                    ->label('Creado')
-                    ->dateTime('d/m/Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('created_at', 'desc')
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                \Filament\Actions\EditAction::make(),
             ]);
     }
 
@@ -145,6 +129,7 @@ class CategoryResource extends Resource
             'index' => Pages\ListCategories::route('/'),
             'create' => Pages\CreateCategory::route('/create'),
             'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'filters' => Pages\ManageCategoryFilters::route('/{record}/filters'),   // ← Esta línea es clave
         ];
     }
 }

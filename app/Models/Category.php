@@ -26,8 +26,8 @@ class Category extends Model
     {
         return $this->belongsToMany(Feature::class, 'category_feature')
             ->withPivot('is_filter', 'show_in_specs', 'sort_order')
-            ->with(['options'])                    // para traer los colores, etc.
-            ->orderBy('category_feature.sort_order', 'ASC');   // ← Corregido
+            ->with(['options']);     // para traer los colores, etc.
+        // ->orderBy('category_feature.sort_order', 'ASC');
     }
 
     /**

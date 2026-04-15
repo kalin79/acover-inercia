@@ -174,6 +174,18 @@ const isSelected = (group, value) => {
     return selectedFilters.value[group]?.includes(String(value)) || false
 }
 
+const toggleManta = (id) => {
+    const headerContainer = document.getElementById(`header-${id}`)
+    const bodyContainer = document.getElementById(`opciones-${id}`)
+    if (headerContainer.classList.contains('cerrar')) {
+        headerContainer.classList.remove('cerrar');
+        bodyContainer.classList.remove('cerrar');
+    }else{
+        headerContainer.classList.add('cerrar');
+        bodyContainer.classList.add('cerrar');
+    }
+}
+
 const toggleOption = (group, value) => {
     const normalizedGroup = group.replace(/_/g, ' ')
 
@@ -203,6 +215,7 @@ const fetchProducts = async (page = null) => {
 
     try {
         const params = { 
+            category_slug: props.category.slug,   // ← ESTO ES CLAVE
             ...selectedFilters.value,
             page: page || pagination.value.current_page 
         }
@@ -212,6 +225,7 @@ const fetchProducts = async (page = null) => {
         }
 
         console.log('🔄 Enviando petición:', params)
+        console.log({params})
 
         const response = await axios.get('/api/products/filter', { params })
 
@@ -226,7 +240,7 @@ const fetchProducts = async (page = null) => {
                 from: response.data.from || 0,
                 to: response.data.to || 0
             }
-
+            console.log(productsList)
             console.log(`✅ Cargados ${productsList.value.length} productos | Página ${pagination.value.current_page}/${pagination.value.last_page}`)
         } else {
             productsList.value = []
