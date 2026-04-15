@@ -18,7 +18,7 @@
                                     type="text" 
                                     placeholder="¿Qué buscas?" 
                                     v-model="searchTerm"
-                                    @keyup.enter="applySearch"
+                                    @input="handleSearchInput"
                                 />
                             </div>
                         </div>
@@ -62,17 +62,17 @@
                         class="products-grid" 
                         :key="'grid-' + JSON.stringify(selectedFilters) + '-' + Date.now()"
                     >
-                        <div v-if="products.data && products.data.length > 0">
+                        <div v-if="productsList && productsList.length > 0">
                             <div 
                                 class="cardProducts" 
-                                v-for="item in products.data" 
-                                :key="item.id"
+                                v-for="product in productsList"
+                                :key="product.id"
                             >
                                 <div class="imgContainer">
                                     <img 
-                                        v-if="item.cover_image"
-                                        :src="`/storage/${item.cover_image}`" 
-                                        :alt="item.titulo" 
+                                        v-if="product.cover_image"
+                                        :src="`/storage/${product.cover_image}`" 
+                                        :alt="product.titulo" 
                                     />
                                     <div v-else style="height:200px; background:#f5f5f5; display:flex; align-items:center; justify-content:center;">
                                         Sin imagen
@@ -80,9 +80,9 @@
                                 </div>
                                 <div class="dataContainer">
                                     <h3>{{ category.titulo }}</h3>
-                                    <h2>{{ item.titulo }}</h2>
+                                    <h2>{{ product.titulo }}</h2>
                                     <Link 
-                                        :href="`/producto/${category.slug}/${item.slug}`" 
+                                        :href="`/producto/${category.slug}/${product.slug}`" 
                                         class="btnRelleno"
                                     >
                                         Ver detalles
@@ -99,64 +99,83 @@
                             </button>
                         </div>
                     </div>
-                    <!-- <pre>{{ JSON.stringify(products, null, 2) }}</pre> -->
-                    <div v-if="products.data && products.data.length > 0" class="pagination">
-                        <Link v-if="products.prev_page_url" :href="products.prev_page_url">Anterior</Link>
-                        <span>Página {{ products.current_page }} de {{ products.last_page }}</span>
-                        <Link v-if="products.next_page_url" :href="products.next_page_url">Siguiente</Link>
+                    <!-- <pre>{{ JSON.stringify(productsList, null, 2) }}</pre> -->
+                    <!-- Paginación -->
+                    <div v-if="pagination.last_page > 1" class="pagination-container">
+                        <button 
+                            @click="goToPage(pagination.current_page - 1)"
+                            :disabled="pagination.current_page === 1"
+                            class="pagination-btn">
+                            ← Anterior
+                        </button>
+
+                        <span class="page-info">
+                            Página {{ pagination.current_page }} de {{ pagination.last_page }}
+                            ({{ pagination.total }} productos)
+                        </span>
+
+                        <button 
+                            @click="goToPage(pagination.current_page + 1)"
+                            :disabled="pagination.current_page === pagination.last_page"
+                            class="pagination-btn">
+                            Siguiente →
+                        </button>
                     </div>
                 </section>
             </div>
         </div>
     </main>
 </template>
-
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { ref, computed, watch, onMounted } from 'vue'
+import axios from 'axios'
 
 const props = defineProps({
-    category: { type: Object, required: true },
-    products: { type: Object, required: true },
-    filters: { type: Object, default: () => ({}) }
+    category: { type: Object, required: true }
 })
 
 const iconarrow = '/images/iconarrow.svg'
 
-const searchTerm = ref('')                    // ← Esta era la línea que faltaba
+// Estados principales
+const productsList = ref([])
+const loading = ref(false)
+const searchTerm = ref('')
 
+const pagination = ref({
+    current_page: 1,
+    last_page: 1,
+    total: 0,
+    per_page: 12,
+    from: 0,
+    to: 0
+})
+
+// Filtros seleccionados
 const selectedFilters = ref({})
 
-const normalizeGroup = (group) => group ? group.replace(/_/g, ' ') : group;
-
-const getFiltersFromUrl = () => {
-    const params = new URLSearchParams(window.location.search)
-    const filters = {}
-
-    params.forEach((value, key) => {
-        if (key.endsWith('[]')) {
-            const group = normalizeGroup(key.replace('[]', ''))
-            if (!filters[group]) filters[group] = []
-            filters[group].push(value)
-        }
-    })
-
-    return filters
-}
-
+// Features filtrables (solo tipo "select")
 const filterableFeatures = computed(() => {
     return props.category.features.filter(f => f.type === 'select')
 })
 
+// ==================== BÚSQUEDA EN TIEMPO REAL ====================
+const searchTimeout = ref(null)
+
+const handleSearchInput = () => {
+    if (searchTimeout.value) clearTimeout(searchTimeout.value)
+
+    searchTimeout.value = setTimeout(() => {
+        fetchProducts()
+    }, 400) // 400ms de debounce
+}
+
+// ==================== MANEJO DE FILTROS ====================
 const isSelected = (group, value) => {
-    const normalizedGroup = normalizeGroup(group)
-    return Array.isArray(selectedFilters.value[normalizedGroup]) 
-        ? selectedFilters.value[normalizedGroup].includes(String(value)) 
-        : false
+    return selectedFilters.value[group]?.includes(String(value)) || false
 }
 
 const toggleOption = (group, value) => {
-    const normalizedGroup = normalizeGroup(group)
+    const normalizedGroup = group.replace(/_/g, ' ')
 
     if (!selectedFilters.value[normalizedGroup]) {
         selectedFilters.value[normalizedGroup] = []
@@ -170,42 +189,76 @@ const toggleOption = (group, value) => {
         selectedFilters.value[normalizedGroup].splice(index, 1)
     }
 
-    applyFilters()
+    // Limpiar grupo vacío
+    if (selectedFilters.value[normalizedGroup].length === 0) {
+        delete selectedFilters.value[normalizedGroup]
+    }
+
+    fetchProducts()
 }
 
-const applyFilters = () => {
-    let queryParts = []
+// ==================== CARGAR PRODUCTOS ====================
+const fetchProducts = async (page = null) => {
+    loading.value = true
 
-    Object.keys(selectedFilters.value).forEach(group => {
-        const values = selectedFilters.value[group]
-        if (Array.isArray(values) && values.length > 0) {
-            values.forEach(value => {
-                queryParts.push(`${encodeURIComponent(group)}[]=${encodeURIComponent(value)}`)
-            })
+    try {
+        const params = { 
+            ...selectedFilters.value,
+            page: page || pagination.value.current_page 
         }
-    })
 
-    const queryString = queryParts.join('&')
-    const url = `/categoria/${props.category.slug}${queryString ? '?' + queryString : ''}`
+        if (searchTerm.value?.trim().length >= 3) {
+            params.search = searchTerm.value.trim()
+        }
 
-    window.location.href = url
-}
+        console.log('🔄 Enviando petición:', params)
 
-const clearFilters = () => {
-    selectedFilters.value = {}
-    window.location.href = `/categoria/${props.category.slug}`
-}
+        const response = await axios.get('/api/products/filter', { params })
 
-const toggleManta = (id) => {
-    const header = document.getElementById(`header-${id}`)
-    const content = document.getElementById(`opciones-${id}`)
-    if (header && content) {
-        header.classList.toggle('cerrar')
-        content.classList.toggle('cerrar')
+        if (response.data.success) {
+            productsList.value = response.data.data || []
+
+            pagination.value = {
+                current_page: response.data.current_page || 1,
+                last_page: response.data.last_page || 1,
+                total: response.data.total || 0,
+                per_page: response.data.per_page || 12,
+                from: response.data.from || 0,
+                to: response.data.to || 0
+            }
+
+            console.log(`✅ Cargados ${productsList.value.length} productos | Página ${pagination.value.current_page}/${pagination.value.last_page}`)
+        } else {
+            productsList.value = []
+        }
+    } catch (error) {
+        console.error('❌ Error al cargar productos:', error.response?.data || error.message)
+        productsList.value = []
+    } finally {
+        loading.value = false
     }
 }
 
+// ==================== CAMBIAR DE PÁGINA ====================
+const goToPage = (page) => {
+    if (page < 1 || page > pagination.value.last_page) return
+    fetchProducts(page)
+}
+
+// ==================== LIMPIAR FILTROS ====================
+const clearFilters = () => {
+    selectedFilters.value = {}
+    searchTerm.value = ''
+    fetchProducts(1)
+}
+
+// ==================== INICIALIZACIÓN ====================
 onMounted(() => {
-    selectedFilters.value = getFiltersFromUrl()
+    fetchProducts()
 })
+
+// Watch para filtros (por si quieres reactividad extra)
+watch(selectedFilters, () => {
+    fetchProducts(1)
+}, { deep: true })
 </script>
