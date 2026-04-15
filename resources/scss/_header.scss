@@ -39,6 +39,24 @@
 
                 a {
                     @include fuenteNavegacion;
+                    position: relative;
+
+                    &:before {
+                        content: '';
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        width: 0%;
+                        height: 2px;
+                        background: $azul;
+                        transition: .25s all ease-in;
+                    }
+
+                    &.active {
+                        &:before {
+                            width: 100%;
+                        }
+                    }
                 }
 
                 button {

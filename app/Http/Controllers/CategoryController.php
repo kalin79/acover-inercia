@@ -48,6 +48,19 @@ class CategoryController extends Controller
                 });
             }
         }
+
+        // ==================== BÚSQUEDA POR TEXTO ====================
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            \Log::info("Búsqueda por texto", ['search' => $search]);
+
+            $query->where(function ($q) use ($search) {
+                $q->where('titulo', 'LIKE', "%{$search}%")
+                    ->orWhere('subtitulo', 'LIKE', "%{$search}%")
+                    ->orWhere('descripcion', 'LIKE', "%{$search}%");
+            });
+        }
         // =====================================================================
 
         \Log::info('=== SQL GENERADO ===');

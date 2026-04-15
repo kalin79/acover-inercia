@@ -1,6 +1,6 @@
 <template>
     <div class="whatsappContainer">
-        <a href="/" target="_blank">
+        <a href="https://wa.link/i0xeew" target="_blank">
             <img :src="icon" alt="">
         </a>
     </div>

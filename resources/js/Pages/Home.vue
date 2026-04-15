@@ -2,7 +2,7 @@
     <section>
         <BannerPrincipal />
         <ElegirnosPrincipal />
-        <IngresosPrincipal />
+        <IngresosPrincipal :featuredProducts="featuredProducts" />
         <PreguntasPrincipal />
         <CompraPrincipal />
     </section>
@@ -18,17 +18,15 @@ import CompraPrincipal from '../components/home/Compra.vue';
 // import { getHome } from "../services/homeService";
 
 
-const homeData = ref([]);
+defineProps({
+    featuredProducts: {
+        type: Array,
+        default: () => []
+    }
+})
 
 onMounted( async () => {
-    document.title = 'Acover';
-    let description = document.querySelector('meta[name="description"]');
-    if (!description) {
-        description = document.createElement('meta')
-        description.name = 'description'
-        document.head.appendChild(description)
-    }
-    description.content = 'Bienvenido a la tienda más confiable.';
+     document.title = 'Acover'
 
     // try {
     //     homeData.value = await getHome();

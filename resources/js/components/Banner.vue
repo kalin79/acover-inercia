@@ -13,7 +13,7 @@
                                 <div class="alinearInferior">
                                     <p v-html="img.descripcion"></p>
                                     <div class="botonesContainer">
-                                        <a href="/" target="_blank" class="btnRelleno">
+                                        <a href="https://wa.link/i0xeew" target="_blank" class="btnRelleno">
                                             <img src="" alt="">
                                             <span>Consultar por Whatsapp</span>
                                         </a>

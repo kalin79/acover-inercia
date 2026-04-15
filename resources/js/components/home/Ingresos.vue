@@ -13,19 +13,22 @@
                     <a href="/lockers" class="btnRelleno">Ver Catálogo</a>
                 </div>
             </div>
+            <!-- <pre>{{ JSON.stringify(featuredProducts, null, 2) }} </pre> -->
             <div class="bodyIngresosContainer">
-                <Splide v-if="products" :options="options" class="splide-custom">
-                    <SplideSlide v-for="(item, index) in products" :key="index">
+                <Splide v-if="featuredProducts && featuredProducts.length > 0" 
+                        :options="options" 
+                        class="splide-custom">
+                    <SplideSlide v-for="product in featuredProducts" :key="product.id">
                         <div class="cardProducts">
                             <div class="imgContainer">
-                                <img :src="item.imagen" :alt="item.titulo" />
+                                <img :src="`/storage/${product.cover_image}`" :alt="product.titulo" />
                             </div>
                             <div class="dataContainer">
-                                <h3>{{item.categoria}}</h3>
-                                <h2>{{item.titulo}}</h2>
-                                <a :href="item.link" class="btnRelleno">
+                                <h3>{{ product.category?.titulo || 'Categoría' }}</h3>
+                                <h2>{{ product.titulo }}</h2>
+                                <Link :href="`/producto/${product.category?.slug}/${product.slug}`" class="btnRelleno">
                                     Ver detalles
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </SplideSlide>
@@ -36,8 +39,17 @@
 </template>
 
 <script setup>
+import { Link } from '@inertiajs/vue3'
 import { Splide, SplideSlide } from '@splidejs/vue-splide'
 import '@splidejs/vue-splide/css'
+
+
+defineProps({
+    featuredProducts: {
+        type: Array,
+        default: () => []
+    }
+})
 
 const options = {
     // type: 'loop',
@@ -68,40 +80,6 @@ const options = {
         page: 'splide__pagination__page page-producto-home',
     }
 }
-
-const products = [
-    {
-        imagen: '/images/p1.webp',
-        link: '/',
-        titulo: `Locker LP01-04 / 4 Puertas`,
-        categoria: `LOCKER DE PLÁSTICO`,
-    },
-    {
-        imagen: '/images/p2.webp',
-        link: '/',
-        titulo: `Cartón corrugado`,
-        categoria: `MATERIAL DE EMBALAJE`,
-    },
-    {
-        imagen: '/images/p3.webp',
-        link: '/',
-        titulo: `Cinta de embalaje`,
-        categoria: `INSUMOS`,
-    },
-    {
-        imagen: '/images/p4.webp',
-        link: '/',
-        titulo: `Strech film`,
-        categoria: `INSUMOS`,
-    },
-    {
-        imagen: '/images/p1.webp',
-        link: '/',
-        titulo: `Strech film`,
-        categoria: `INSUMOS`,
-    }
-   
-]
 
 </script>
 

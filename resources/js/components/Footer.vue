@@ -30,17 +30,17 @@ y embalaje para el sector empresarial.
                             <a href="/">Principal</a>
                        </li>
                        <li>
-                            <a href="/">Quienes somos</a>
+                            <a href="/nosotros">Quienes somos</a>
                        </li>
                        <li>
-                            <a href="/">Lockers</a>
+                            <a href="/categoria/lockers">Lockers</a>
                        </li>
                        <li>
-                            <a href="/">Insumos</a>
+                            <a href="/categoria/material-de-embalaje">Material de embalaje</a>
                        </li>
-                       <li>
+                       <!-- <li>
                             <a href="/">Contáctenos</a>
-                       </li> 
+                       </li>  -->
                     </ul>
                 </div>
                 <div>

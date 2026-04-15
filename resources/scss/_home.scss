@@ -116,13 +116,17 @@
                 align-items: center;
                 padding-top: 1.15rem;
                 padding-bottom: 2rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
 
                 h3 {
                     @include categoriaCardProduct;
+                    text-align: center;
                 }
 
                 h2 {
                     @include tituloCardProduct;
+                    text-align: center;
                 }
 
                 .btnRelleno {

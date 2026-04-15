@@ -14,7 +14,12 @@
                         <div class="mantaFiltro">
                             <h3>Buscar por:</h3>
                             <div class="rowForm">
-                                <input type="text" placeholder="¿Qué buscas?" />
+                                <input 
+                                    type="text" 
+                                    placeholder="¿Qué buscas?" 
+                                    v-model="searchTerm"
+                                    @keyup.enter="applySearch"
+                                />
                             </div>
                         </div>
                         <div 
@@ -94,7 +99,7 @@
                             </button>
                         </div>
                     </div>
-
+                    <!-- <pre>{{ JSON.stringify(products, null, 2) }}</pre> -->
                     <div v-if="products.data && products.data.length > 0" class="pagination">
                         <Link v-if="products.prev_page_url" :href="products.prev_page_url">Anterior</Link>
                         <span>Página {{ products.current_page }} de {{ products.last_page }}</span>
@@ -105,6 +110,7 @@
         </div>
     </main>
 </template>
+
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { Link } from '@inertiajs/vue3'
@@ -117,90 +123,89 @@ const props = defineProps({
 
 const iconarrow = '/images/iconarrow.svg'
 
-// Normalizar grupo (Sistema_de_seguridad → Sistema de seguridad)
-const normalizeGroup = (group) => group ? group.replace(/_/g, ' ') : group;
+const searchTerm = ref('')                    // ← Esta era la línea que faltaba
 
 const selectedFilters = ref({})
 
-// Leer filtros desde la URL al cargar la página
+const normalizeGroup = (group) => group ? group.replace(/_/g, ' ') : group;
+
 const getFiltersFromUrl = () => {
     const params = new URLSearchParams(window.location.search)
     const filters = {}
 
     params.forEach((value, key) => {
         if (key.endsWith('[]')) {
-            const group = normalizeGroup(key.replace('[]', ''));
-            if (!filters[group]) filters[group] = [];
-            filters[group].push(value);
+            const group = normalizeGroup(key.replace('[]', ''))
+            if (!filters[group]) filters[group] = []
+            filters[group].push(value)
         }
-    });
+    })
 
-    return filters;
-};
+    return filters
+}
 
 const filterableFeatures = computed(() => {
     return props.category.features.filter(f => f.type === 'select')
 })
 
 const isSelected = (group, value) => {
-    const normalizedGroup = normalizeGroup(group);
+    const normalizedGroup = normalizeGroup(group)
     return Array.isArray(selectedFilters.value[normalizedGroup]) 
         ? selectedFilters.value[normalizedGroup].includes(String(value)) 
-        : false;
-};
+        : false
+}
 
 const toggleOption = (group, value) => {
-    const normalizedGroup = normalizeGroup(group);
+    const normalizedGroup = normalizeGroup(group)
 
     if (!selectedFilters.value[normalizedGroup]) {
-        selectedFilters.value[normalizedGroup] = [];
+        selectedFilters.value[normalizedGroup] = []
     }
 
-    const index = selectedFilters.value[normalizedGroup].indexOf(String(value));
+    const index = selectedFilters.value[normalizedGroup].indexOf(String(value))
 
     if (index === -1) {
-        selectedFilters.value[normalizedGroup].push(String(value));
+        selectedFilters.value[normalizedGroup].push(String(value))
     } else {
-        selectedFilters.value[normalizedGroup].splice(index, 1);
+        selectedFilters.value[normalizedGroup].splice(index, 1)
     }
 
-    applyFilters();
-};
+    applyFilters()
+}
 
 const applyFilters = () => {
-    let queryParts = [];
+    let queryParts = []
 
     Object.keys(selectedFilters.value).forEach(group => {
-        const values = selectedFilters.value[group];
+        const values = selectedFilters.value[group]
         if (Array.isArray(values) && values.length > 0) {
             values.forEach(value => {
-                queryParts.push(`${encodeURIComponent(group)}[]=${encodeURIComponent(value)}`);
-            });
+                queryParts.push(`${encodeURIComponent(group)}[]=${encodeURIComponent(value)}`)
+            })
         }
-    });
+    })
 
-    const queryString = queryParts.join('&');
-    const url = `/categoria/${props.category.slug}${queryString ? '?' + queryString : ''}`;
+    const queryString = queryParts.join('&')
+    const url = `/categoria/${props.category.slug}${queryString ? '?' + queryString : ''}`
 
-    window.location.href = url;
-};
+    window.location.href = url
+}
 
 const clearFilters = () => {
-    selectedFilters.value = {};
-    window.location.href = `/categoria/${props.category.slug}`;
-};
+    selectedFilters.value = {}
+    window.location.href = `/categoria/${props.category.slug}`
+}
 
 const toggleManta = (id) => {
-    const header = document.getElementById(`header-${id}`);
-    const content = document.getElementById(`opciones-${id}`);
+    const header = document.getElementById(`header-${id}`)
+    const content = document.getElementById(`opciones-${id}`)
     if (header && content) {
-        header.classList.toggle('cerrar');
-        content.classList.toggle('cerrar');
+        header.classList.toggle('cerrar')
+        content.classList.toggle('cerrar')
     }
-};
+}
 
-// Restaurar selección al cargar la página
 onMounted(() => {
-    selectedFilters.value = getFiltersFromUrl();
-});
+    selectedFilters.value = getFiltersFromUrl()
+})
 </script>
