@@ -1,6 +1,8 @@
 import { createApp, h } from 'vue'
 import './bootstrap';
 import { createInertiaApp } from '@inertiajs/vue3'
+import { createHead } from '@vueuse/head'   // ← Correcto para vueuse/head
+
 import { Link } from '@inertiajs/vue3'
 
 import FrontLayout from './layouts/FrontLayout.vue';
@@ -75,6 +77,10 @@ createInertiaApp({
                 route
             }
         });
+
+        // Configuración correcta para Unhead v3
+        const head = createHead()
+        app.use(head)
 
         app.mount(el)
     },

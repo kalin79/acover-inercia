@@ -12,7 +12,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
 import { Splide, SplideSlide } from '@splidejs/vue-splide'
 import '@splidejs/vue-splide/css'
 
