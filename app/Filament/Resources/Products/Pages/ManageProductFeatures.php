@@ -75,13 +75,11 @@ class ManageProductFeatures extends Page implements HasTable
             ])
             ->defaultSort('pivot_sort_order', 'asc')
             ->headerActions([
-                // Reemplazamos AttachAction por un botón normal
                 Actions\Action::make('addFeature')
                     ->label('Agregar Característica')
                     ->icon('heroicon-o-plus')
                     ->color('success')
-                    ->url(fn () => route('filament.admin.resources.features.create')), 
-                    // Si quieres una página dedicada para asignar, cambia esta URL
+                    ->url(fn () => ProductResource::getUrl('attach-features', ['record' => $this->record])),
             ])
             ->actions([
                 Actions\Action::make('editFeature')
@@ -90,7 +88,20 @@ class ManageProductFeatures extends Page implements HasTable
                     ->color('warning')
                     ->url(fn ($record) => "/acover-admin/products/{$this->record->id}/features/{$record->id}/edit"),
 
-                Actions\DetachAction::make(),
+                // Reemplazamos DetachAction por acción manual
+                Actions\Action::make('detach')
+                    ->label('Eliminar')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->action(function ($record) {
+                        DB::table('product_features')
+                            ->where('product_id', $this->record->id)
+                            ->where('feature_id', $record->id)
+                            ->delete();
+
+                        $this->dispatch('refresh-table');
+                    }),
             ]);
     }
 

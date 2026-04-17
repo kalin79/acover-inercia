@@ -84,7 +84,7 @@ class ProductResource extends Resource
                     ])
                     ->columnSpanFull(),
 
-                // Galería de Medios (se mantiene aquí porque es un repeater más complejo)
+                // Galería de Medios
                 Section::make('Galería de Medios (Imágenes, Videos y YouTube)')
                     ->schema([
                         Repeater::make('media')
@@ -130,12 +130,12 @@ class ProductResource extends Resource
                     ])
                     ->columnSpanFull(),
 
-                // Sección con botón para gestionar Imágenes y Banners
-                Section::make('Imagen Cover, Banners y PDF')
-                    ->description('Gestiona los banners, imagen principal y documento técnico')
+                // Sección para gestionar Banners, Cover y PDF
+                Section::make('Imágenes, Banners y Documento Técnico')
+                    ->description('Gestiona los banners, imagen principal y ficha técnica')
                     ->schema([
                         \Filament\Actions\Action::make('manageMedia')
-                            ->label('Imágenes, Banners y PDF')
+                            ->label('Gestionar Banners, Cover y PDF')
                             ->icon('heroicon-o-photo')
                             ->color('warning')
                             ->size('lg')
@@ -143,9 +143,9 @@ class ProductResource extends Resource
                     ])
                     ->columnSpanFull(),
 
-                // Sección de Características (ya la tenías)
+                // Sección para gestionar Características
                 Section::make('Características del Producto')
-                    ->description('Gestiona las características y valores de este producto')
+                    ->description('Gestiona las características y sus valores')
                     ->schema([
                         \Filament\Actions\Action::make('manageFeatures')
                             ->label('Gestionar Características')
@@ -199,20 +199,19 @@ class ProductResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            // Sin RelationManager
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index'    => Pages\ListProducts::route('/'),
-            'create'   => Pages\CreateProduct::route('/create'),
-            'edit'     => Pages\EditProduct::route('/{record}/edit'),
-            'features' => Pages\ManageProductFeatures::route('/{record}/features'),
-            'media'    => Pages\ManageProductMedia::route('/{record}/media'),   // ← Nueva página para imágenes y banners
-            'feature-edit' => Pages\EditProductFeature::route('/{record}/features/{feature}/edit'), // ← Esta es la que faltaba
+            'index'           => Pages\ListProducts::route('/'),
+            'create'          => Pages\CreateProduct::route('/create'),
+            'edit'            => Pages\EditProduct::route('/{record}/edit'),
+            'features'        => Pages\ManageProductFeatures::route('/{record}/features'),
+            'feature-edit'    => Pages\EditProductFeature::route('/{record}/features/{feature}/edit'),
+            'attach-features' => Pages\AttachProductFeatures::route('/{record}/attach-features'),
+            'media'           => Pages\ManageProductMedia::route('/{record}/media'),   // ← Página de medios
         ];
     }
 }

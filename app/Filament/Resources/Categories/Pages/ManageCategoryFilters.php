@@ -83,14 +83,16 @@ class ManageCategoryFilters extends Page implements HasTable
     }
 
     // ====================== ACCIONES ======================
-    protected function getTableActions(): array
+        protected function getTableActions(): array
     {
         return [
             Actions\EditAction::make()
                 ->form($this->getEditFormSchema())
                 ->using(function (Feature $record, array $data) {
+                    // Actualizamos el grupo si se cambió
                     $record->update(['group' => $data['group']]);
 
+                    // Actualizamos el orden en la tabla pivote
                     DB::table('category_feature')
                         ->where('category_id', $this->record->id)
                         ->where('feature_id', $record->id)
@@ -98,24 +100,52 @@ class ManageCategoryFilters extends Page implements HasTable
                 })
                 ->after(fn () => $this->dispatch('refresh-table')),
 
-            Actions\DeleteAction::make(),
+            // Botón de Desvincular (NO borrar el filtro)
+            Actions\Action::make('detach')
+                ->label('Desvincular')
+                ->icon('heroicon-o-x-circle')
+                ->color('danger')
+                ->requiresConfirmation()
+                ->modalHeading('¿Desvincular esta característica?')
+                ->modalDescription('Esta acción solo eliminará la relación con la categoría. El filtro seguirá existiendo para otras categorías.')
+                ->modalSubmitActionLabel('Sí, desvincular')
+                ->action(function (Feature $record) {
+                    DB::table('category_feature')
+                        ->where('category_id', $this->record->id)
+                        ->where('feature_id', $record->id)
+                        ->delete();
+
+                    $this->dispatch('refresh-table');
+                }),
         ];
     }
 
-    protected function getEditFormSchema(): array
+        protected function getEditFormSchema(): array
     {
+        // Obtenemos los grupos que YA están asignados a esta categoría
+        $assignedGroups = DB::table('category_feature')
+            ->join('features', 'features.id', '=', 'category_feature.feature_id')
+            ->where('category_feature.category_id', $this->record->id)
+            ->whereNotNull('features.group')
+            ->pluck('features.group')
+            ->unique()
+            ->toArray();
+
         return [
             Select::make('group')
                 ->label('Grupo')
-                ->options(function () {
+                ->options(function () use ($assignedGroups) {
                     return Feature::query()
                         ->where('type', 'select')
+                        ->whereNotIn('group', $assignedGroups)   // ← Solo los grupos NO asignados
+                        ->whereNotNull('group')
                         ->distinct()
                         ->pluck('group', 'group')
                         ->toArray();
                 })
                 ->required()
-                ->searchable(),
+                ->searchable()
+                ->placeholder('Selecciona un grupo disponible'),
 
             TextInput::make('sort_order')
                 ->label('Orden')
