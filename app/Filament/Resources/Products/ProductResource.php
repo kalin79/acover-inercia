@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Products;
 
 use App\Models\Product;
-use App\Filament\Resources\Products\RelationManagers\FeaturesRelationManager;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -15,18 +14,15 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\BulkActionGroup;
 
-// Schema Components (Filament v5)
+// Schema Components
 use Filament\Schemas\Components\Section;
-// Form Components (la mayoría siguen aquí en v5)
+
+// Form Components
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-// use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\RichEditor;
-
-// Get correcto para Filament v5
-use Filament\Schemas\Components\Utilities\Get as SchemaGet;
 
 // Tables
 use Filament\Tables;
@@ -53,7 +49,7 @@ class ProductResource extends Resource
                             ->required()
                             ->searchable()
                             ->preload()
-                            ->columnSpanFull(),   // ← Ocupa todo el ancho
+                            ->columnSpanFull(),
 
                         TextInput::make('titulo')
                             ->label('Título')
@@ -78,65 +74,17 @@ class ProductResource extends Resource
                         RichEditor::make('descripcion')
                             ->label('Descripción del producto')
                             ->toolbarButtons([
-                                'bold',
-                                'italic',
-                                'underline',
-                                'strike',
-                                'h2',
-                                'h3',
-                                'bulletList',
-                                'orderedList',
-                                'link',
-                                'undo',
-                                'redo',
-                                'blockquote',
-                                'codeBlock',
+                                'bold', 'italic', 'underline', 'strike',
+                                'h2', 'h3', 'bulletList', 'orderedList',
+                                'link', 'undo', 'redo', 'blockquote', 'codeBlock',
                             ])
                             ->extraInputAttributes(['style' => 'min-height: 150px;'])
                             ->placeholder('Escribe aquí la descripción detallada del producto...')
                             ->columnSpanFull(),
                     ])
-                    ->columnSpanFull(),   // ← Esto hace que toda la sección ocupe el 100%
-                Section::make('Imágenes y Banners')
-                    ->schema([
-                        FileUpload::make('banner_pc')
-                            ->label('Banner PC (Escritorio)')
-                            ->image()
-                            ->directory('products/banners')
-                            ->disk('public')                      // ← Forzar disco public
-                            ->imagePreviewHeight('120px')
-                            ->maxSize(2048)           // 2MB
-                            ->columnSpan(1),
-
-                        FileUpload::make('banner_mobile')
-                            ->label('Banner Móvil')
-                            ->image()
-                            ->directory('products/banners')
-                            ->imagePreviewHeight('120px')
-                            ->disk('public')                      // ← Forzar disco public
-                            ->maxSize(2048)
-                            ->columnSpan(1),
-
-                        FileUpload::make('cover_image')
-                            ->label('Imagen Cover (Principal)')
-                            ->disk('public')                      // ← Forzar disco public
-                            ->image()
-                            ->directory('products/covers')
-                            ->helperText('Tamaño: 384px x 600px')
-                            ->maxSize(2048)
-                            ->columnSpanFull(),
-
-                        FileUpload::make('technical_document')
-                            ->label('Documento Técnico / Ficha (PDF)')
-                            ->acceptedFileTypes(['application/pdf'])
-                            ->directory('products/documents')
-                            ->disk('public')
-                            ->maxSize(5120) // 5MB
-                            ->downloadable()
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(2)
                     ->columnSpanFull(),
+
+                // Galería de Medios (se mantiene aquí porque es un repeater más complejo)
                 Section::make('Galería de Medios (Imágenes, Videos y YouTube)')
                     ->schema([
                         Repeater::make('media')
@@ -146,8 +94,8 @@ class ProductResource extends Resource
                                 Select::make('type')
                                     ->label('Tipo de medio')
                                     ->options([
-                                        'image' => '🖼️ Imagen',
-                                        'video' => '🎥 Video MP4',
+                                        'image'   => '🖼️ Imagen',
+                                        'video'   => '🎥 Video MP4',
                                         'youtube' => '▶️ Video de YouTube',
                                     ])
                                     ->required()
@@ -159,17 +107,15 @@ class ProductResource extends Resource
                                     ->disk('public')
                                     ->directory('products/gallery')
                                     ->maxSize(20480)
-                                    ->rules([])
-                                    ->previewable()
+                                    ->visible(fn ($get) => in_array($get('type'), ['image', 'video']))
                                     ->imagePreviewHeight('180px')
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['image', 'video']))
-                                    ->helperText(fn(SchemaGet $get) => $get('type') === 'video' ? 'Solo archivos MP4' : 'Imágenes y videos'),
+                                    ->helperText(fn ($get) => $get('type') === 'video' ? 'Solo archivos MP4' : 'Imágenes y videos'),
 
                                 TextInput::make('youtube_url')
-                                    ->label('YouTube')
-                                    ->placeholder('Código del video')
-                                    ->visible(fn(SchemaGet $get) => $get('type') === 'youtube')
-                                    ->helperText('Ejemplo: dQw4w9wgxcq'),
+                                    ->label('Código de YouTube')
+                                    ->placeholder('Ej: dQw4w9wgxcq')
+                                    ->visible(fn ($get) => $get('type') === 'youtube')
+                                    ->columnSpanFull(),
 
                                 TextInput::make('sort_order')
                                     ->label('Orden')
@@ -181,12 +127,37 @@ class ProductResource extends Resource
                             ->addActionLabel('Agregar nuevo elemento a la galería')
                             ->defaultItems(0)
                             ->collapsible(),
-                    ]),
+                    ])
+                    ->columnSpanFull(),
 
+                // Sección con botón para gestionar Imágenes y Banners
+                Section::make('Imagen Cover, Banners y PDF')
+                    ->description('Gestiona los banners, imagen principal y documento técnico')
+                    ->schema([
+                        \Filament\Actions\Action::make('manageMedia')
+                            ->label('Imágenes, Banners y PDF')
+                            ->icon('heroicon-o-photo')
+                            ->color('warning')
+                            ->size('lg')
+                            ->url(fn ($record) => ProductResource::getUrl('media', ['record' => $record])),
+                    ])
+                    ->columnSpanFull(),
+
+                // Sección de Características (ya la tenías)
+                Section::make('Características del Producto')
+                    ->description('Gestiona las características y valores de este producto')
+                    ->schema([
+                        \Filament\Actions\Action::make('manageFeatures')
+                            ->label('Gestionar Características')
+                            ->icon('heroicon-o-adjustments-horizontal')
+                            ->color('warning')
+                            ->size('lg')
+                            ->url(fn ($record) => ProductResource::getUrl('features', ['record' => $record])),
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 
-    // ... el resto de tu código (table, getRelations, getPages) se mantiene igual
     public static function table(Table $table): Table
     {
         return $table
@@ -203,7 +174,6 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('slug')
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                // Nuevo campo: Documento Técnico
                 Tables\Columns\TextColumn::make('technical_document')
                     ->label('Documento')
                     ->formatStateUsing(fn($state) => $state ? '✓ PDF' : '—')
@@ -227,20 +197,22 @@ class ProductResource extends Resource
             ]);
     }
 
-
     public static function getRelations(): array
     {
         return [
-            FeaturesRelationManager::class,
+            // Sin RelationManager
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index'    => Pages\ListProducts::route('/'),
+            'create'   => Pages\CreateProduct::route('/create'),
+            'edit'     => Pages\EditProduct::route('/{record}/edit'),
+            'features' => Pages\ManageProductFeatures::route('/{record}/features'),
+            'media'    => Pages\ManageProductMedia::route('/{record}/media'),   // ← Nueva página para imágenes y banners
+            'feature-edit' => Pages\EditProductFeature::route('/{record}/features/{feature}/edit'), // ← Esta es la que faltaba
         ];
     }
 }
