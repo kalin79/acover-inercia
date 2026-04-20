@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductFilterController;
-
+use App\Http\Controllers\Api\CotizacionController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -11,3 +11,5 @@ Route::get('/test', function () {
 });
 
 Route::get('/products/filter', [ProductFilterController::class, 'filter']);
+
+Route::post('/cotizacion', [CotizacionController::class, 'store']);

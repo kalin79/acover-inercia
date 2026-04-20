@@ -90,8 +90,9 @@ const options = {
     height: 70px;
     background: transparent;
     border: 1px solid #084DA6;
-    transform: none;
-    top: -7.5rem;
+    transform: translateY(-50%);
+    top: 50%;
+    
 }
 
 .splide__arrow.arrow-producto-home svg {
@@ -127,14 +128,16 @@ const options = {
     color: #ABABAB;
 }
 
+
+
 .splide__arrow--next.arrow-producto-home-next::before {
   mask-image: url('/images/arrow-right.svg');
   -webkit-mask-image: url('/images/arrow-right.svg');
 }
 
 .splide__arrow--prev.arrow-producto-home-prev {
-    left: auto;
-    right: 7.5rem;
+    left: 1rem;
+    right: auto;
 }
 
 .splide__pagination__page.page-producto-home {
@@ -166,12 +169,16 @@ const options = {
     .splide__arrow.arrow-producto-home {
         width: 80px;
         height: 80px;
+        transform: none;
+        top: -7.5rem;
     }
     .splide__arrow.arrow-producto-home::before {
         width: 22px;
         height: 55px;
     }
     .splide__arrow--prev.arrow-producto-home-prev {
+        /* right: 7rem; */
+        left: auto;
         right: 7rem;
     }
 }

@@ -23,6 +23,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="listComprasM">
+                        <div class="itemContainer" v-for="(item, index) in compraData" :key="index">
+                            <div class="iconContainer">
+                                <img :src="item.icon" alt="">
+                                <h3 v-html="item.titulo"></h3>
+                            </div>
+                            <div class="infoContainer">
+                                <p v-html="item.descripcion"></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

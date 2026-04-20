@@ -1,37 +1,78 @@
 @mixin fuenteBoton {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 600;
     font-size: 1rem;
     line-height: 1.5em;
     color: white;
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin fuenteBotonPop {
-    font-family: 'Poppins';
+    font-family: "Poppins";
     font-weight: 500;
     font-size: 0.875rem;
     line-height: 1.5em;
     color: white;
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin fuenteCookies {
-    font-family: 'Poppins';
+    font-family: "Poppins";
     font-weight: 500;
     font-size: 0.8rem;
     line-height: 1.5em;
     color: white;
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin fuenteNavegacion {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 600;
     font-size: 1rem;
     line-height: 1.5em;
     color: #595959;
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
+}
+
+@mixin fuenteNavegacionM {
+    font-family: "Barlow";
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: 1.5em;
+    color: #fff;
+    @media screen and (min-width: 992px) {
+        font-size: 3rem;
+    }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin titularesGrande {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 700;
     font-size: 2.875rem;
     line-height: 1em;
@@ -46,14 +87,20 @@
         font-size: 3.5rem;
         line-height: 1em;
     }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin subTitulo {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 600;
     font-size: 1.125rem;
     line-height: 1.25em;
-    color: #78CBFF;
+    color: #78cbff;
 
     @media screen and (min-width: 992px) {
         font-size: 1.125rem;
@@ -64,10 +111,16 @@
         font-size: 1.125rem;
         line-height: 1.25em;
     }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin titulo {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 500;
     font-size: 2rem;
     line-height: 1em;
@@ -82,14 +135,20 @@
         font-size: 2.625rem;
         line-height: 1.15em;
     }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin tituloMediano {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 400;
     font-size: 1.25rem;
     line-height: 1.35em;
-    color: #78CBFF;
+    color: #78cbff;
 
     @media screen and (min-width: 992px) {
         font-size: 1.25rem;
@@ -100,10 +159,16 @@
         font-size: 1.375rem;
         line-height: 1.65em;
     }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin descripcion {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 500;
     font-size: 1.125rem;
     line-height: 1.5em;
@@ -118,10 +183,16 @@
         font-size: 1.125rem;
         line-height: 1.5em;
     }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin tituloCardProduct {
-    font-family: 'Poppins';
+    font-family: "Poppins";
     font-weight: 500;
     font-size: 0.875rem;
     line-height: 1.5em;
@@ -136,10 +207,16 @@
         font-size: 0.875rem;
         line-height: 1.5em;
     }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin categoriaCardProduct {
-    font-family: 'Poppins';
+    font-family: "Poppins";
     font-weight: 500;
     font-size: 0.75rem;
     line-height: 1.5em;
@@ -154,23 +231,34 @@
         font-size: 0.75rem;
         line-height: 1.5em;
     }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin inputFiltroForm {
-    font-family: 'Poppins';
+    font-family: "Poppins";
     font-weight: 500;
     font-size: 0.813rem;
     line-height: 1.5em;
-    color: #C0C0C0;
-
+    color: #c0c0c0;
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin titularProducto {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 500;
     font-size: 1.25rem;
     line-height: 1.35em;
-    color: #78CBFF;
+    color: #78cbff;
 
     @media screen and (min-width: 992px) {
         font-size: 1.75rem;
@@ -181,12 +269,18 @@
         font-size: 2rem;
         line-height: 1.25em;
     }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin descripcionProducto {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 400;
-    font-size: .85rem;
+    font-size: 0.85rem;
     line-height: 1.5em;
     color: #565656;
 
@@ -198,13 +292,19 @@
     @media screen and (min-width: 1200px) {
         font-size: 1rem;
         line-height: 1.5em;
+    }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
     }
 }
 
 @mixin subTituloProducto {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 500;
-    font-size: .85rem;
+    font-size: 0.85rem;
     line-height: 1.5em;
     color: #565656;
 
@@ -217,14 +317,24 @@
         font-size: 1rem;
         line-height: 1.5em;
     }
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }
 
 @mixin descripcionPequeProducto {
-    font-family: 'Barlow';
+    font-family: "Barlow";
     font-weight: 500;
     font-size: 0.938rem;
     line-height: 1.5em;
     color: #727272;
-
-
+    br {
+        display: none;
+        @media screen and (min-width: 992px) {
+            display: block;
+        }
+    }
 }

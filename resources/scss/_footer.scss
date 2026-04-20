@@ -4,31 +4,49 @@ footer {
 
     .headerFooterContainer {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(1, 1fr);
         gap: 1rem;
-
+        @media screen and (min-width: 992px){
+            grid-template-columns: repeat(3, 1fr);
+        }
         >div {
             &:nth-of-type(1) {
+                padding: 3rem 0 0;
+                
                 p {
                     font-family: 'Barlow';
                     font-weight: 500;
                     font-size: .875rem;
                     line-height: 1.5em;
                     color: white;
+                    text-align: center;
+                    @media screen and (min-width: 992px){
+                        text-align: left;
+                    }
                 }
 
                 .redesContainer {
                     display: flex;
-                    justify-content: flex-start;
+                    justify-content: center;
                     align-items: center;
                     gap: .85rem;
                     margin: 1.5rem 0;
+                    @media screen and (min-width: 992px){
+                        justify-content: flex-start;
+                    }
                 }
 
                 .iconContainer {
                     max-width: 160px;
                     margin-bottom: 1.5rem;
-
+                    text-align: center;
+                    margin-left: auto;
+                    margin-right: auto;
+                    @media screen and (min-width: 992px){
+                        margin-left: 0;
+                        margin-right: 0;
+                        text-align: left;
+                    }
                     img {
                         width: 100%;
                         height: auto;
@@ -40,8 +58,11 @@ footer {
 
             &:nth-of-type(2),
             &:nth-of-type(3) {
+                display: none;
                 padding-top: 4rem;
-
+                @media screen and (min-width: 992px){
+                    display: block;
+                }
                 h4 {
                     font-family: 'Barlow';
                     font-weight: 700;

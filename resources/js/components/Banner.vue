@@ -14,7 +14,7 @@
                                     <p v-html="img.descripcion"></p>
                                     <div class="botonesContainer">
                                         <a href="https://wa.link/i0xeew" target="_blank" class="btnRelleno">
-                                            <img src="" alt="">
+                                            <img :src="icon2" alt="">
                                             <span>Consultar por Whatsapp</span>
                                         </a>
                                         <a href="/" class="btnSinRelleno">
@@ -40,7 +40,7 @@
 import { Link } from '@inertiajs/vue3'
 import { Splide, SplideSlide } from '@splidejs/vue-splide'
 import '@splidejs/vue-splide/css'
-
+const icon2 = '/images/wa2.svg';
 const options = {
 //   type: 'loop',
   perPage: 1,
@@ -98,6 +98,14 @@ const banners = [
 
 <style>
 /* Ahora usas Tailwind directamente */
+
+.splide__arrow.my-arrow-home{
+    top: 75%;
+    transform: translateY(75%);
+    width: 90px;
+    height: 90px;
+}
+
 .splide__arrows.my-arrow-home {
     width: 70px;
     height: 70px;
@@ -157,10 +165,14 @@ const banners = [
     background: transparent;
 }
 
+
+
 @media screen and (min-width: 992px){
     .splide__arrow.my-arrow-home {
         width: 90px;
         height: 90px;
+        top: 50%;
+        transform: translateY(-50%);
     }
     .splide__arrow.my-arrow-home::before {
         width: 22px;

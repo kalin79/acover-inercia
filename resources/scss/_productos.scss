@@ -3,10 +3,17 @@
 
     .layoutGrid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(1, 1fr);
         gap: 3rem;
-
+        @media screen and (min-width: 992px) {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+        }
         .productoInfoContainer {
+            padding-top: 0rem;
+            @media screen and (min-width: 992px) {
+                padding-top: 2.5rem;
+            }
             h1 {
                 @include titularProducto;
                 color: $azul;
@@ -17,10 +24,11 @@
                 color: #000000;
             }
 
-
-
             .caracetisticasContainer {
-
+                margin-top: 2rem;
+                @media screen and (min-width: 992px) {
+                    margin-top: 0rem;
+                }
                 h3,
                 h4 {
                     @include subTituloProducto;
@@ -36,31 +44,34 @@
 
                         .btnTransparente {
                             height: 48px;
-                            width: 262px;
+                            width: 100%;
                             border: 1px solid #969696;
                             background: tranparent;
                             display: flex;
                             justify-content: center;
                             align-items: center;
-                            gap: .5rem;
+                            gap: 0.5rem;
                             box-sizing: border-box;
                             border-radius: 30px;
                             @include fuenteBotonPop;
                             color: #626262;
                             text-decoration: none;
+                            @media screen and (min-width: 992px) {
+                                width: 262px;
+                            }
                         }
 
                         .itemContainer {
-                            border: 1px solid #C7C7C7;
+                            border: 1px solid #c7c7c7;
                             border-bottom: 0;
                             padding: 1rem 1rem;
                             display: flex;
 
                             &.itemColoresContainer {
                                 justify-content: flex-start;
-                                gap: .25rem;
+                                gap: 0.25rem;
 
-                                >div {
+                                > div {
                                     width: 16px;
                                     height: 16px;
                                     background: #000;
@@ -69,17 +80,16 @@
                                 }
                             }
 
-                            >div {
+                            > div {
                                 flex: 1;
                                 @include descripcionPequeProducto;
                             }
 
                             &:last-child {
-                                border-bottom: 1px solid #C7C7C7;
+                                border-bottom: 1px solid #c7c7c7;
                             }
                         }
                     }
-
 
                     h4 {
                         position: relative;
@@ -87,7 +97,7 @@
                         margin-bottom: 1.25rem;
 
                         &:before {
-                            content: '';
+                            content: "";
                             width: 6px;
                             height: 6px;
                             background: #000;
@@ -102,7 +112,7 @@
             }
 
             .descripcionProdContainer {
-                margin-top: .5rem;
+                margin-top: 0.5rem;
 
                 p {
                     @include descripcionProducto;
@@ -110,21 +120,37 @@
             }
 
             .btnContainer {
-                display: flex;
-                justify-content: center;
-                gap: 1rem;
-                margin-bottom: 2.5rem;
-
+                margin-bottom: 0em;
+                @media screen and (min-width: 992px) {
+                    flex-direction: row;
+                    display: flex;
+                    justify-content: center;
+                    gap: 1rem;
+                    margin-bottom: 2.5rem;
+                }
+                &.pc {
+                    display: none;
+                    @media screen and (min-width: 992px) {
+                        display: flex;
+                    }
+                }
+                &.movil {
+                    display: block;
+                    margin-top: 4rem;
+                    @media screen and (min-width: 992px) {
+                        display: none;
+                    }
+                }
                 a,
                 button {
                     flex: 1;
                     height: 58px;
                     width: 100%;
-                    background: #2AB200;
+                    background: #2ab200;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    gap: .5rem;
+                    gap: 0.5rem;
                     box-sizing: border-box;
                     border-radius: 30px;
                     @include fuenteBotonPop;
@@ -141,7 +167,6 @@
 
                 button {
                     background: $azul;
-
                 }
             }
         }
@@ -151,10 +176,12 @@
 // ====================== PRODUCTOS PAGE ======================
 
 .products-page {
-    padding: 60px 0 100px;
+    padding: 1rem 0 4rem;
     background-color: #fff;
-    min-height: 100vh;
-
+    @media screen and (min-width: 992px) {
+        padding: 5rem 0 4rem;
+        min-height: 100vh;
+    }
     // =============================================
     // PAGINACIÓN - Listado de Productos
     // =============================================
@@ -197,7 +224,7 @@
             color: #666;
             white-space: nowrap;
             border: 1px solid #d8d8d8;
-            padding: .85rem 1rem;
+            padding: 0.85rem 1rem;
             border-radius: 10px;
         }
     }
@@ -215,35 +242,37 @@
         }
     }
 
-
     .products-wrapper {
-        display: flex;
-        gap: 40px;
-        align-items: flex-start; // ← Muy importante para sticky
-        // ==================== SIDEBAR FILTROS ====================
-
+        @media screen and (min-width: 992px) {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start; // ← Muy importante para sticky
+            flex-direction: row;
+        }
         .filters-sidebar {
-            width: 256px;
-            flex: 0 0 256px;
-            flex-shrink: 0; // evita que se encoja
+            display: none;
+            @media screen and (min-width: 992px) {
+                width: 256px;
+                flex: 0 0 256px;
+                flex-shrink: 0; // evita que se encoja
 
-            position: sticky;
-            top: 110px; // ← Cambia según la altura de tu header
-            z-index: 10;
+                position: sticky;
+                top: 110px; // ← Cambia según la altura de tu header
+                z-index: 10;
 
-            // Para que el filtro no crezca más que la pantalla y haga scroll interno si es muy largo
-            max-height: calc(100vh - 100px);
-            overflow-y: auto;
+                // Para que el filtro no crezca más que la pantalla y haga scroll interno si es muy largo
+                max-height: calc(100vh - 100px);
+                overflow-y: auto;
 
-            // Estilos visuales
-            background-color: #F7F7F7;
-            border-radius: 16px;
-            // box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e9ecef;
-            padding: 32px 24px;
-
+                // Estilos visuales
+                background-color: #f7f7f7;
+                border-radius: 16px;
+                // box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+                border: 1px solid #e9ecef;
+                padding: 32px 24px;
+                display: block;
+            }
             .filters-inner {
-
                 // Puedes agregar más estilos aquí si quieres separar contenido
                 .headerFiltro {
                     display: flex;
@@ -256,7 +285,7 @@
                 .mantaFiltro {
                     background: white;
                     border-radius: 16px;
-                    border: 1px solid #DFDFDF;
+                    border: 1px solid #dfdfdf;
                     padding: 1rem 1rem 2.5rem;
                     margin-bottom: 1rem;
 
@@ -267,7 +296,7 @@
                         cursor: pointer;
 
                         .iconContainer {
-                            transition: .25s all ease-in;
+                            transition: 0.25s all ease-in;
                         }
 
                         &.cerrar {
@@ -281,7 +310,7 @@
                         margin-top: 1rem;
                         display: block;
                         opacity: 1;
-                        transition: .25s all ease-in;
+                        transition: 0.25s all ease-in;
 
                         &.cerrar {
                             display: none;
@@ -293,12 +322,12 @@
                             align-items: center;
                             gap: 12px;
                             @include fuenteBotonPop;
-                            color: #6B6B6B;
+                            color: #6b6b6b;
                             user-select: none;
                             transition: color 0.2s;
                             cursor: pointer;
-                            margin-bottom: .5rem;
-                            letter-spacing: -.05em;
+                            margin-bottom: 0.5rem;
+                            letter-spacing: -0.05em;
 
                             &:hover {
                                 color: #000;
@@ -314,7 +343,7 @@
                             .checkmark {
                                 width: 20px;
                                 height: 20px;
-                                border: 1px solid #BCBCBC;
+                                border: 1px solid #bcbcbc;
                                 border-radius: 6px;
                                 flex-shrink: 0;
                                 position: relative;
@@ -322,13 +351,13 @@
                                 background-color: #fff;
                             }
 
-                            input:checked+.checkmark {
+                            input:checked + .checkmark {
                                 background-color: $azul; // color principal (puedes cambiarlo)
                                 border-color: $azul;
                             }
 
-                            input:checked+.checkmark:after {
-                                content: '';
+                            input:checked + .checkmark:after {
+                                content: "";
                                 position: absolute;
                                 top: 3px;
                                 left: 6px;
@@ -342,7 +371,7 @@
                             .count {
                                 margin-left: auto;
                                 @include fuenteBotonPop;
-                                color: #6B6B6B;
+                                color: #6b6b6b;
                             }
                         }
                     }
@@ -351,7 +380,7 @@
                         width: 100%;
                         height: 37px;
                         overflow: hidden;
-                        border: 1px solid #DADADA;
+                        border: 1px solid #dadada;
                         border-radius: 8px;
                         margin-top: 1rem;
 
@@ -364,27 +393,26 @@
                     }
                 }
 
-
                 h3 {
                     @include fuenteBotonPop;
-                    color: #6B6B6B;
-                    letter-spacing: -.05em;
+                    color: #6b6b6b;
+                    letter-spacing: -0.05em;
                 }
 
                 button {
                     width: 93px;
                     height: 37px;
                     background: #fff;
-                    border: 1px solid #BCBCBC;
+                    border: 1px solid #bcbcbc;
                     display: flex;
                     justify-content: center;
-                    gap: .5rem;
+                    gap: 0.5rem;
                     box-sizing: border-box;
-                    padding-top: .45rem;
+                    padding-top: 0.45rem;
                     border-radius: 30px;
                     text-decoration: none;
                     @include fuenteBotonPop;
-                    color: #7A7A7A;
+                    color: #7a7a7a;
                 }
             }
 
@@ -408,37 +436,182 @@
             }
         }
 
+        // Filtros para el mobil
+        .filters-containerM {
+            background: #ececec; // rosa claro como en tus screenshots
+            padding: 0.25rem 0;
+            border-radius: 30px;
+            border: 2px solid #d5d5d5;
+            overflow: hidden;
+            display: block;
+            @media screen and (min-width: 992px) {
+                display: none;
+            }
+
+            .filters-headerM {
+                width: 100%;
+                background: #ececec;
+                border: none;
+                padding: 12px 16px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+                // border-bottom: 1px solid #d5d5d5;
+
+                .filterHeaderTitle {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 1rem;
+                }
+                .filers-iconFiltrado {
+                    img {
+                        width: 24px;
+                        height: 27px;
+                    }
+                }
+                span {
+                    @include subTitulo;
+                    color: #3c3c3c;
+                }
+                .filters-arrow {
+                    transition: transform 0.3s;
+                    &.open {
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+
+            .filters-panelM {
+                // background: #ececec;
+                border-radius: 12px;
+                margin-top: 0.75rem;
+                padding: 0.5rem 0 0;
+                .filter-sectionM {
+                    .checkbox-groupM {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                        padding: 1rem 0;
+                        &.collapsed {
+                            display: none; // o max-height: 0 + overflow hidden si quieres animación
+                        }
+                        .checkbox-labelM {
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            cursor: pointer;
+                            @include fuenteBotonPop;
+                            color: #6b6b6b;
+                            letter-spacing: -0.025em;
+
+                            .color-dotM {
+                                width: 24px;
+                                height: 24px;
+                                border-radius: 6px;
+                                border: 2px solid #bcbcbc;
+                                position: relative;
+                                &:before {
+                                    content: "";
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 50%;
+                                    width: 16px;
+                                    height: 16px;
+                                    background: #ececec;
+                                    border-radius: 6px;
+                                    transform: translate(-50%, -50%);
+                                }
+                            }
+
+                            input:checked + .color-dotM:after {
+                                content: "";
+                                position: absolute;
+                                width: 16px;
+                                height: 16px;
+                                background: #0a2d61;
+                                border-radius: 6px;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                            }
+                        }
+                    }
+                    .section-headerM {
+                        @include subTitulo;
+                        color: #3c3c3c;
+                        margin-bottom: 8px;
+                        padding: 0.75rem 0;
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        border-bottom: 1px solid #d5d5d5;
+                        border-top: 1px solid #d5d5d5;
+                        &.collapsed {
+                            border-bottom: 0px solid #d5d5d5;
+                        }
+                        .iconFill {
+                            img {
+                                width: 24px;
+                                height: 27px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .results-count {
+            display: block;
+            border: 0px solid red;
+            padding: 2rem 1rem 1.5rem;
+            @include subTitulo;
+            color: #838383;
+            @media screen and (min-width: 992px) {
+                display: none;
+            }
+        }
+
+        // fin de filtro de movil
+
         // ==================== CONTENIDO PRODUCTOS ====================
 
         .products-content {
             flex: 1;
             min-width: 0; // importante cuando hay flex + grid dentro
 
-
-
             // Ejemplo de grid de productos (ajústalo a tu gusto)
             .products-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
                 gap: 28px;
 
                 @media screen and (min-width: 992px) {
-                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                    grid-template-columns: repeat(
+                        auto-fill,
+                        minmax(200px, 1fr)
+                    );
                 }
 
                 @media screen and (min-width: 1200px) {
-                    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                    grid-template-columns: repeat(
+                        auto-fill,
+                        minmax(260px, 1fr)
+                    );
                 }
 
                 .cardProducts {
-                    min-height: 540px;
+                    min-height: 408px;
                     border-radius: 20px;
                     overflow: hidden;
-                    border: 1px solid #DDDDDD;
+                    border: 1px solid #dddddd;
 
-                    // @media screen and (min-width: 1400px) {
-                    //     height: 500px;
-                    // }
+                    @media screen and (min-width: 992px) {
+                        min-height: 540px;
+                    }
 
                     .dataContainer {
                         background: white;
@@ -466,9 +639,9 @@
                             background: $azul;
                             display: flex;
                             justify-content: center;
-                            gap: .5rem;
+                            gap: 0.5rem;
                             box-sizing: border-box;
-                            padding-top: .65rem;
+                            padding-top: 0.65rem;
                             border-radius: 30px;
                             @include fuenteBotonPop;
                             color: white;
@@ -478,10 +651,14 @@
                     }
 
                     .imgContainer {
-                        height: 400px;
+                        height: 268px;
+
+                        @media screen and (min-width: 992px) {
+                            height: 400px;
+                        }
 
                         @media screen and (min-width: 1400px) {
-                            height: 500px;
+                            height: 450px;
                         }
 
                         img {
@@ -498,7 +675,7 @@
 }
 
 .bannerProductoDetail {
-    background: #0A2D61;
+    background: #0a2d61;
     margin-top: 4.5rem;
     height: 118px;
     display: flex;

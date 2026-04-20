@@ -1,10 +1,24 @@
 <template>
     <div class="bannerInterno">
         <!-- {{ banners.data.banners }} -->
-        <Splide v-if="category && category.banner_pc !=''" :options="options" class="splide-custom">
+        <Splide
+            v-if="category && category.banner_pc != ''"
+            :options="options"
+            class="splide-custom"
+        >
             <SplideSlide>
-                <div class="slideContainer" >
-                    <img :src="`/storage/${category.banner_pc}`" alt="Slide" class="imgBanner" />
+                <div class="slideContainer">
+                    <picture>
+                        <source
+                            media="(max-width: 768px)"
+                            :srcset="`/storage/${category.banner_mobile}`"
+                        />
+                        <img
+                            :src="`/storage/${category.banner_pc}`"
+                            alt="Slide"
+                            class="imgBanner"
+                        />
+                    </picture>
                 </div>
             </SplideSlide>
         </Splide>
@@ -12,8 +26,8 @@
 </template>
 
 <script setup>
-import { Splide, SplideSlide } from '@splidejs/vue-splide'
-import '@splidejs/vue-splide/css'
+import { Splide, SplideSlide } from "@splidejs/vue-splide";
+import "@splidejs/vue-splide/css";
 
 const options = {
     //   type: 'loop',
@@ -25,25 +39,24 @@ const options = {
     pagination: true,
     classes: {
         // Flechas
-        arrows: 'splide__arrows my-arrows-home',
-        arrow: 'splide__arrow my-arrow-home',
-        prev: 'splide__arrow--prev my-arrow-home-prev',
-        next: 'splide__arrow--next my-arrow-home-next',
+        arrows: "splide__arrows my-arrows-home",
+        arrow: "splide__arrow my-arrow-home",
+        prev: "splide__arrow--prev my-arrow-home-prev",
+        next: "splide__arrow--next my-arrow-home-next",
 
         // Paginación
-        pagination: 'splide__pagination my-pagination-home',
-        page: 'splide__pagination__page my-page-home',
-    }
-}
+        pagination: "splide__pagination my-pagination-home",
+        page: "splide__pagination__page my-page-home",
+    },
+};
 
 const props = defineProps({
     category: {
         type: Object,
-        default: null
-    }
+        default: null,
+    },
 });
 </script>
-
 
 <style>
 /* Ahora usas Tailwind directamente */
@@ -63,23 +76,23 @@ const props = defineProps({
 
 /* Agregamos tu propio SVG como fondo */
 .splide__arrow.my-arrow-home::before {
-    content: '';
+    content: "";
     display: block;
     width: 16px;
     height: 49px;
     fill: white;
     color: white;
-    background: currentColor;           /* toma el color del texto */
-    mask-image: url('/images/arrow-left.svg');   /* ← tu SVG */
+    background: currentColor; /* toma el color del texto */
+    mask-image: url("/images/arrow-left.svg"); /* ← tu SVG */
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
-    -webkit-mask-image: url('/images/arrow-left.svg');
+    -webkit-mask-image: url("/images/arrow-left.svg");
 }
 
 .splide__arrow--next.my-arrow-home-next::before {
-  mask-image: url('/images/arrow-right.svg');
-  -webkit-mask-image: url('/images/arrow-right.svg');
+    mask-image: url("/images/arrow-right.svg");
+    -webkit-mask-image: url("/images/arrow-right.svg");
 }
 
 .splide__pagination__page.my-page-home {
@@ -90,8 +103,8 @@ const props = defineProps({
     border: 1px solid white;
 }
 
-.splide__pagination__page.my-page-home:before{
-    content: '';
+.splide__pagination__page.my-page-home:before {
+    content: "";
     position: absolute;
     width: 10px;
     height: 10px;
@@ -99,14 +112,14 @@ const props = defineProps({
     background: #fff;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
 }
 
 .splide__pagination__page.my-page-home.is-active {
     background: transparent;
 }
 
-@media screen and (min-width: 992px){
+@media screen and (min-width: 992px) {
     .splide__arrow.my-arrow-home {
         width: 90px;
         height: 90px;
@@ -117,7 +130,7 @@ const props = defineProps({
     }
 }
 
-@media screen and (min-width: 1400px){
+@media screen and (min-width: 1400px) {
     .splide__pagination__page.my-arrow-home {
         width: 114px;
         height: 114px;

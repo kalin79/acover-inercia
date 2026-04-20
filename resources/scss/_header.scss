@@ -3,8 +3,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    border-bottom: 1px solid #DADADA;
-    background: rgba(white, .65);
+    border-bottom: 1px solid #dadada;
+    background: rgba(white, 0.65);
     padding: 1rem 0;
     z-index: 6000;
     height: 72px;
@@ -25,9 +25,16 @@
 
         .navContainer {
             grid-column: 5 / -1;
-
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+            @media screen and (min-width: 992px) {
+                justify-content: flex-end;
+                align-items: flex-start;
+            }
             nav {
-                display: none;
+                // display: none;
 
                 @media screen and (min-width: 992px) {
                     display: flex;
@@ -42,14 +49,14 @@
                     position: relative;
 
                     &:before {
-                        content: '';
+                        content: "";
                         position: absolute;
                         bottom: 0;
                         left: 0;
                         width: 0%;
                         height: 2px;
                         background: $azul;
-                        transition: .25s all ease-in;
+                        transition: 0.25s all ease-in;
                     }
 
                     &.active {
@@ -68,10 +75,13 @@
                 }
 
                 .opcionesNav {
-                    display: flex;
-                    justify-content: flex-start;
-                    align-items: center;
-                    gap: 1rem
+                    display: none;
+                    @media screen and (min-width: 992px) {
+                        display: flex;
+                        justify-content: flex-start;
+                        align-items: center;
+                        gap: 1rem;
+                    }
                 }
             }
         }
@@ -88,4 +98,51 @@
 
 .PanelMenuMobil {
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba($azulOscuro, 1);
+    backdrop-filter: blur(10px); /* 👈 efecto blur */
+    -webkit-backdrop-filter: blur(10px); /* Safari */
+    z-index: 10000;
+    &.open {
+        display: block;
+    }
+    .BodyContainer {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        a {
+            @include fuenteNavegacionM;
+        }
+    }
+    .headerContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        .closeContainer {
+            flex: 0 0 30px;
+            svg {
+                width: 100%;
+                height: auto;
+                object-fit: contain;
+                path {
+                    fill: white;
+                }
+            }
+        }
+        .logoContainer {
+            flex: 0 0 120px;
+            img {
+                width: 100%;
+                height: auto;
+                object-fit: contain;
+            }
+        }
+    }
 }
