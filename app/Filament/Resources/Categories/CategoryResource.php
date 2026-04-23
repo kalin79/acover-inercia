@@ -17,19 +17,23 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\FileUpload;
 
-// Action
-use Filament\Actions\Action;
+// ==================== PARA LA TABLA ====================
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+
+// Actions
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\BulkActionGroup;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::Folder;
-
     protected static string|\UnitEnum|null $navigationGroup = 'Catálogo';
-
     protected static ?int $navigationSort = 1;
-
     protected static ?string $recordTitleAttribute = 'titulo';
 
     public static function form(Schema $schema): Schema
@@ -78,58 +82,69 @@ class CategoryResource extends Resource
                     ])
                     ->columns(2),
 
-                // SECCIÓN CON TARJETAS (icono arriba + título abajo)
                 Section::make('Secciones de la Categoría')
                     ->description('Gestiona las diferentes partes de esta categoría')
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                Action::make('manageFilters')
+                                \Filament\Actions\Action::make('manageFilters')
                                     ->label('Gestionar Filtros')
                                     ->icon(Heroicon::AdjustmentsHorizontal)
                                     ->color('warning')
-                                    ->url(fn(Category $record) => "/acover-admin/categories/{$record->id}/filters")
+                                    ->url(fn (?Category $record) => $record?->exists 
+                                        ? CategoryResource::getUrl('filters', ['record' => $record]) 
+                                        : null
+                                    )
+                                    ->visible(fn ($livewire) => method_exists($livewire, 'getRecord') && $livewire->getRecord()?->exists)
+                                    ->disabled(fn ($livewire) => !($livewire instanceof \Filament\Resources\Pages\EditRecord))
                                     ->extraAttributes([
                                         'class' => 'h-32 flex flex-col items-center justify-center gap-3 text-center hover:scale-105 transition-transform border border-dashed'
                                     ]),
-
-                                // Action::make('manageSEO')
-                                //     ->label('Configuración SEO')
-                                //     ->icon(Heroicon::GlobeAlt)
-                                //     ->color('info')
-                                //     ->url(fn(Category $record) => "/acover-admin/categories/{$record->id}/seo")
-                                //     ->extraAttributes([
-                                //         'class' => 'h-32 flex flex-col items-center justify-center gap-3 text-center hover:scale-105 transition-transform border border-dashed'
-                                //     ]),
                             ])
                             ->columns(2),
                     ])
-                    ->columnSpanFull(),   // Esta línea hace que ocupe todo el ancho
+                    ->columnSpanFull(),
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                \Filament\Tables\Columns\TextColumn::make('titulo')
-                    ->label('Nombre')
-                    ->searchable()
-                    ->sortable()
-                    ->weight('bold'),
-            ])
-            ->actions([
-                \Filament\Actions\EditAction::make(),
-            ]);
-    }
+   public static function table(Table $table): Table
+{
+    return $table
+        ->columns([
+            TextColumn::make('titulo')
+                ->label('Nombre')
+                ->searchable()
+                ->sortable()
+                ->weight('bold'),
+
+            TextColumn::make('slug')
+                ->label('Slug')
+                ->toggleable(isToggledHiddenByDefault: true),
+
+            TextColumn::make('descripcion')
+                ->label('Descripción')
+                ->limit(60)
+                ->toggleable(isToggledHiddenByDefault: true),
+        ])
+        ->defaultSort('titulo', 'asc')
+        ->actions([
+            EditAction::make(),
+            DeleteAction::make(),
+        ])
+        ->bulkActions([
+            BulkActionGroup::make([
+                DeleteBulkAction::make(),
+            ]),
+        ]);
+}
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
-            'filters' => Pages\ManageCategoryFilters::route('/{record}/filters'),   // ← Esta línea es clave
+            'index'   => Pages\ListCategories::route('/'),
+            'create'  => Pages\CreateCategory::route('/create'),
+            'edit'    => Pages\EditCategory::route('/{record}/edit'),
+            'filters' => Pages\ManageCategoryFilters::route('/{record}/filters'),
         ];
     }
 }

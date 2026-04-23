@@ -131,6 +131,7 @@ class ProductResource extends Resource
                     ->columnSpanFull(),
 
                 // Sección para gestionar Banners, Cover y PDF
+               // Sección para gestionar Banners, Cover y PDF
                 Section::make('Imágenes, Banners y Documento Técnico')
                     ->description('Gestiona los banners, imagen principal y ficha técnica')
                     ->schema([
@@ -139,7 +140,11 @@ class ProductResource extends Resource
                             ->icon('heroicon-o-photo')
                             ->color('warning')
                             ->size('lg')
-                            ->url(fn ($record) => ProductResource::getUrl('media', ['record' => $record])),
+                            ->url(fn (?Product $record) => $record?->exists 
+                                ? ProductResource::getUrl('media', ['record' => $record]) 
+                                : '#'
+                            )
+                           ->visible(fn ($livewire) => method_exists($livewire, 'getRecord') && $livewire->getRecord()?->exists)
                     ])
                     ->columnSpanFull(),
 
@@ -152,7 +157,11 @@ class ProductResource extends Resource
                             ->icon('heroicon-o-adjustments-horizontal')
                             ->color('warning')
                             ->size('lg')
-                            ->url(fn ($record) => ProductResource::getUrl('features', ['record' => $record])),
+                            ->url(fn (?Product $record) => $record?->exists 
+                                ? ProductResource::getUrl('features', ['record' => $record]) 
+                                : '#'
+                            )
+                           ->visible(fn ($livewire) => method_exists($livewire, 'getRecord') && $livewire->getRecord()?->exists)
                     ])
                     ->columnSpanFull(),
             ]);

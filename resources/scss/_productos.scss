@@ -682,6 +682,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 
     @media screen and (min-width: 992px) {
         margin-top: 5rem;
